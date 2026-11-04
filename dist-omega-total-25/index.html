@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<meta name="theme-color" content="#020617"/>
+<title>VOIDCROWN Ω · TOTAL 25 · VOID SMASH</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#020617;--cyan:#5eead4;--blue:#38bdf8;--gold:#fbbf24;--pink:#e879f9;--red:#f43f5e;--muted:#94a3b8;--glass:rgba(8,12,24,.78);--line:rgba(94,234,212,.22)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:#f8fafc;font-family:Inter,system-ui,sans-serif;overflow:hidden}
+#boot{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1.2rem;background:radial-gradient(circle at 50% 30%,#0f172a,#020617 70%)}
+#boot h1{font-family:Orbitron,sans-serif;letter-spacing:.18em;font-size:clamp(1rem,4.5vw,1.6rem);background:linear-gradient(90deg,#5eead4,#38bdf8,#e879f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+#boot p{color:var(--muted);font-size:.78rem;max-width:360px;margin:.7rem 0 1.2rem;line-height:1.5}
+#boot button{font-family:Orbitron,sans-serif;border:0;padding:.85rem 1.6rem;border-radius:999px;font-weight:700;cursor:pointer;color:#041016;background:linear-gradient(135deg,#5eead4,#38bdf8);box-shadow:0 0 30px rgba(94,234,212,.35);letter-spacing:.1em}
+#app{display:none;height:100%;flex-direction:column}#app.on{display:flex}
+header{display:flex;align-items:center;gap:.5rem;padding:.5rem .7rem;border-bottom:1px solid var(--line);background:rgba(2,6,23,.85)}
+header h1{font-family:Orbitron,sans-serif;font-size:.72rem;letter-spacing:.12em;color:var(--cyan);flex:1}
+.nav{display:flex;gap:.25rem;overflow-x:auto;padding:.35rem .5rem;border-bottom:1px solid var(--line)}
+.nav button{flex:0 0 auto;font-family:Orbitron,sans-serif;font-size:.55rem;padding:.4rem .65rem;border-radius:999px;border:1px solid transparent;background:transparent;color:var(--muted);cursor:pointer}
+.nav button.on{border-color:var(--line);color:var(--cyan);background:rgba(94,234,212,.1)}
+main{flex:1;position:relative;overflow:hidden}
+.view{display:none;height:100%;overflow:auto}.view.on{display:block}
+.panel{margin:.7rem;padding:.85rem;border-radius:16px;background:var(--glass);border:1px solid var(--line)}
+.panel h2{font-family:Orbitron,sans-serif;font-size:.8rem;color:var(--gold);margin-bottom:.4rem}
+.panel p,.panel li{font-size:.72rem;color:var(--muted);line-height:1.45}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;padding:.7rem}
+.card{background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:.75rem;cursor:pointer;min-height:92px}
+.card.wide{grid-column:1/-1}
+.card h3{font-family:Orbitron,sans-serif;font-size:.7rem;color:var(--cyan);margin-bottom:.25rem}
+.card p{font-size:.65rem;color:var(--muted);line-height:1.35}
+.tag{float:right;font-size:.48rem;color:var(--gold);border:1px solid rgba(251,191,36,.35);padding:.1rem .3rem;border-radius:999px}
+.stat{font-family:Orbitron,sans-serif;font-size:.58rem;background:var(--glass);border:1px solid var(--line);border-radius:999px;padding:.3rem .55rem;color:var(--cyan)}
+.stat b{color:var(--gold)}
+#smash-wrap{position:relative;height:100%;background:#000}
+#gl{display:block;width:100%;height:100%}
+.hud{position:absolute;inset:0;pointer-events:none;z-index:5}.hud .p{pointer-events:auto}
+.topbar{position:absolute;top:0;left:0;right:0;padding:.5rem .6rem;display:flex;gap:.4rem;flex-wrap:wrap;background:linear-gradient(180deg,rgba(0,0,0,.8),transparent)}
+.weapons{position:absolute;left:0;right:0;bottom:0;padding:.5rem .55rem .85rem;display:flex;gap:.3rem;flex-wrap:wrap;background:linear-gradient(0deg,rgba(0,0,0,.88),transparent)}
+.wbtn{pointer-events:auto;font-family:Orbitron,sans-serif;font-size:.52rem;padding:.45rem .6rem;border-radius:999px;border:1px solid var(--line);background:var(--glass);color:#e2e8f0;cursor:pointer}
+.wbtn.on{border-color:var(--pink);color:var(--pink)}
+.side{position:absolute;right:.5rem;top:3rem;width:min(92vw,280px);max-height:calc(100% - 6.5rem);overflow:auto;background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:.7rem;transform:translateX(110%);transition:.25s;pointer-events:auto}
+.side.on{transform:none}
+.side h3{font-family:Orbitron,sans-serif;font-size:.7rem;color:var(--cyan);margin-bottom:.35rem}
+.side p{font-size:.65rem;color:var(--muted);line-height:1.4;margin-bottom:.35rem}
+.edai{border-left:3px solid var(--pink);padding-left:.5rem;margin:.4rem 0;font-size:.65rem;color:#e9d5ff}
+.bar{height:6px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;margin:.25rem 0}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--red));width:100%}
+.toast{position:absolute;left:50%;bottom:4.8rem;transform:translateX(-50%);background:var(--glass);border:1px solid var(--line);padding:.4rem .8rem;border-radius:999px;font-size:.65rem;opacity:0;transition:.3s;white-space:nowrap}
+.toast.on{opacity:1}
+.inv table{width:100%;border-collapse:collapse;font-size:.62rem}
+.inv td,.inv th{border-bottom:1px solid rgba(255,255,255,.06);padding:.3rem;text-align:left;color:var(--muted)}
+.inv th{color:var(--cyan);font-family:Orbitron,sans-serif;font-size:.55rem}
+</style>
+</head>
+<body>
+<div id="boot">
+  <h1>VOIDCROWN Ω TOTAL</h1>
+  <p>Drive absorbido · Void Smash (inspiración sandbox cosmológico, identidad VOIDCROWN) · EDAI · BETA 25.0.0</p>
+  <button id="go">INICIAR MONSTRUO</button>
+  <p style="margin-top:1rem;font-size:.6rem;color:#64748b">v25.0.0 · capas · población · gravedad N · genoma P0</p>
+</div>
+<div id="app">
+  <header>
+    <h1>VOIDCROWN Ω∞</h1>
+    <span class="stat">XP <b id="xp">0</b></span>
+    <span class="stat">CICATRIZ <b id="scar">0</b></span>
+  </header>
+  <nav class="nav">
+    <button class="on" data-v="hub">HUB</button>
+    <button data-v="smash">VOID SMASH</button>
+    <button data-v="system">SISTEMA</button>
+    <button data-v="canon">CANON</button>
+    <button data-v="drive">DRIVE</button>
+    <button data-v="edai">EDAI</button>
+  </nav>
+  <main>
+    <section class="view on" id="v-hub">
+      <div class="grid">
+        <div class="card wide" data-go="smash"><span class="tag">P0</span><h3>VOID SMASH</h3><p>Corteza · manto · núcleo · armas · población · cicatrices · EDAI. Causalidad visible.</p></div>
+        <div class="card" data-go="system"><h3>SISTEMA N</h3><p>Órbitas + gravedad entre cuerpos.</p></div>
+        <div class="card" data-go="canon"><h3>CANON</h3><p>Arquitectura permanente + roadmap.</p></div>
+        <div class="card wide" data-go="drive"><h3>INVENTARIO DRIVE</h3><p>57 carpetas raíz · beta APKs 23.1→24.1.1 · ledger EDAI.</p></div>
+        <div class="card" data-go="edai"><h3>EDAI / KHAOS</h3><p>Feedback · genoma 100 · cola P0.</p></div>
+      </div>
+    </section>
+    <section class="view" id="v-smash">
+      <div id="smash-wrap">
+        <canvas id="gl"></canvas>
+        <div class="hud">
+          <div class="topbar p">
+            <span class="stat">VIVOS <b id="pop">8.12B</b></span>
+            <span class="stat">MUERTOS <b id="dead">0</b></span>
+            <span class="stat">MASA <b id="mass">100%</b></span>
+            <span class="stat">CAPA <b id="layer">CORTEZA</b></span>
+            <button class="wbtn" id="btn-side" style="margin-left:auto">DATOS</button>
+          </div>
+          <div class="side" id="side">
+            <h3>EDAI · Director</h3>
+            <div class="edai" id="edai-msg">Listo. Elige arma y toca el planeta.</div>
+            <p>Corteza</p><div class="bar"><i id="b-crust"></i></div>
+            <p>Manto</p><div class="bar"><i id="b-mantle"></i></div>
+            <p>Núcleo</p><div class="bar"><i id="b-core"></i></div>
+            <p id="scar-log" style="margin-top:.5rem;font-size:.6rem;color:#64748b">Sin cicatrices.</p>
+            <button class="wbtn" id="btn-rebuild" style="margin-top:.5rem;width:100%">RECONSTRUIR</button>
+          </div>
+          <div class="weapons p" id="weapons"></div>
+          <div class="toast" id="toast"></div>
+        </div>
+      </div>
+    </section>
+    <section class="view" id="v-system">
+      <div class="panel">
+        <h2>Sistema · gravedad N-cuerpos</h2>
+        <p>Arrastra cuerpos. Reset / caos para System Smash lite.</p>
+        <canvas id="sys" width="720" height="420" style="width:100%;height:auto;background:#000;border-radius:12px;border:1px solid var(--line);touch-action:none"></canvas>
+        <button class="wbtn" id="sys-reset">RESET</button>
+        <button class="wbtn" id="sys-chaos">CAOS</button>
+      </div>
+    </section>
+    <section class="view" id="v-canon">
+      <div class="panel">
+        <h2>Arquitectura canónica</h2>
+        <p>Canon = workspace 105MB / GitHub voidcrownzonazerodiazero. APK = distro derivada.</p>
+        <ul style="margin:.4rem 0 .6rem 1.1rem">
+          <li>Planetario + texturas earth</li>
+          <li>RISK / Día Zero / Voidcrown emerge</li>
+          <li>Cine 8 escenas + audio Viejo</li>
+          <li>Void Smash = lab de catástrofe con cicatrices al monstruo</li>
+        </ul>
+        <p>APK tip: VOIDCROWN_24.1.1_ABSORB_WS105_SIGNED.apk en 02_BETA_JUGABLE.</p>
+      </div>
+    </section>
+    <section class="view inv" id="v-drive">
+      <div class="panel">
+        <h2>Drive (raíz inventariada)</h2>
+        <p>200 ítems: 57 carpetas + 143 archivos.</p>
+        <table>
+          <tr><th>Carpeta</th><th>Rol</th></tr>
+          <tr><td>00_INBOX_NUEVO</td><td>Entrada</td></tr>
+          <tr><td>02_BETA_JUGABLE</td><td>APKs 23.1.x–24.1.1 + static + icono</td></tr>
+          <tr><td>99_LEDGER_EDAI</td><td>ABSORB, GENOMA, IDEOLOGÍA, ORDENES, KHAOS</td></tr>
+          <tr><td>LEGION_OMEGA_4.1 / 4.2</td><td>COSMOS + CINEMA</td></tr>
+          <tr><td>VOIDCROWN_* / LEGION_*</td><td>Histórico releases</td></tr>
+        </table>
+        <p style="margin-top:.5rem;color:#fbbf24">No se releyeron megas 500–664MB byte a byte; genoma jugable primero.</p>
+      </div>
+    </section>
+    <section class="view" id="v-edai">
+      <div class="panel">
+        <h2>KHAOS LAB</h2>
+        <p>EDAI propone; tú das feedback; pesos en localStorage.</p>
+        <div class="edai" id="edai-task">Tarea: prueba LÁSER y di si se siente quirúrgico.</div>
+        <button class="wbtn" id="fb-ok">INTEGRA</button>
+        <button class="wbtn" id="fb-miss">LE FALTA</button>
+        <button class="wbtn" id="fb-no">NO</button>
+        <p id="fb-log" style="margin-top:.6rem;font-size:.65rem;color:var(--muted)"></p>
+      </div>
+      <div class="panel"><h2>Cola P0</h2><p>P25 capas · P26 cráteres · D32 precisión · D37 vacío · D38 escudo · D39 cadena · X94 · X100.</p></div>
+    </section>
+  </main>
+</div>
+<script>
+(function(){
+const SK='VOIDCROWN_OMEGA_TOTAL_25';
+let S={xp:0,scar:0,dead:0,pop:8.12e9,crust:100,mantle:100,core:100,scars:[],fb:[]};
+try{const r=localStorage.getItem(SK);if(r)S=Object.assign(S,JSON.parse(r));}catch(e){}
+function save(){localStorage.setItem(SK,JSON.stringify(S));}
+function ui(){document.getElementById('xp').textContent=S.xp|0;document.getElementById('scar').textContent=S.scar|0;}
+document.getElementById('go').onclick=()=>{document.getElementById('boot').style.display='none';document.getElementById('app').classList.add('on');ui();initSmash();initSys();};
+function show(v){document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));if(v==='smash')resizeSmash();}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>show(b.dataset.v));
+document.querySelectorAll('.card[data-go]').forEach(c=>c.onclick=()=>show(c.dataset.go));
+const WEAPONS=[
+  {id:'meteor',name:'METEORO',pow:12,pop:0.02,layer:'crust',color:'#fb923c'},
+  {id:'laser',name:'LÁSER',pow:8,pop:0.008,layer:'pierce',color:'#38bdf8'},
+  {id:'nuke',name:'NUCLEAR',pow:22,pop:0.08,layer:'crust',color:'#fbbf24'},
+  {id:'void',name:'VACÍO',pow:18,pop:0.05,layer:'mantle',color:'#a78bfa'},
+  {id:'bh',name:'AGUJERO',pow:35,pop:0.15,layer:'core',color:'#e879f9'},
+  {id:'shield',name:'ESCUDO',pow:-10,pop:0,layer:'heal',color:'#5eead4'},
+  {id:'chain',name:'CADENA',pow:15,pop:0.04,layer:'chain',color:'#f43f5e'},
+];
+let weapon=WEAPONS[0];
+const wbox=document.getElementById('weapons');
+WEAPONS.forEach(w=>{const b=document.createElement('button');b.className='wbtn'+(w===weapon?' on':'');b.textContent=w.name;b.onclick=()=>{weapon=w;document.querySelectorAll('#weapons .wbtn').forEach(x=>x.classList.remove('on'));b.classList.add('on');toast(w.name);edai('Arma: '+w.name);};wbox.appendChild(b);});
+document.getElementById('btn-side').onclick=()=>document.getElementById('side').classList.toggle('on');
+document.getElementById('btn-rebuild').onclick=()=>{S.crust=Math.min(100,S.crust+25);S.mantle=Math.min(100,S.mantle+10);craters=craters.filter((_,i)=>i%2===0);S.xp+=5;save();syncBars();edai('Reconstrucción parcial.');toast('RECONSTRUIDO');};
+function toast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),1400);}
+function edai(t){document.getElementById('edai-msg').textContent=t;}
+function fmt(n){if(n>=1e9)return(n/1e9).toFixed(2)+'B';if(n>=1e6)return(n/1e6).toFixed(1)+'M';return Math.floor(n).toString();}
+function syncBars(){document.getElementById('b-crust').style.width=S.crust+'%';document.getElementById('b-mantle').style.width=S.mantle+'%';document.getElementById('b-core').style.width=S.core+'%';document.getElementById('pop').textContent=fmt(Math.max(0,S.pop));document.getElementById('dead').textContent=fmt(S.dead);document.getElementById('mass').textContent=((S.crust+S.mantle+S.core)/3).toFixed(0)+'%';let layer='CORTEZA';if(S.crust<40)layer='MANTO';if(S.mantle<35)layer='NÚCLEO';if(S.core<20)layer='COLAPSO';document.getElementById('layer').textContent=layer;document.getElementById('scar-log').textContent=S.scars.slice(-5).join(' · ')||'Sin cicatrices.';ui();}
+let canvas,ctx,R=0,cx=0,cy=0,craters=[],parts=[],rot=0;
+function initSmash(){canvas=document.getElementById('gl');ctx=canvas.getContext('2d');resizeSmash();canvas.addEventListener('pointerdown',onHit);requestAnimationFrame(loop);syncBars();}
+function resizeSmash(){if(!canvas)return;const w=canvas.parentElement.clientWidth,h=canvas.parentElement.clientHeight;canvas.width=w*devicePixelRatio;canvas.height=h*devicePixelRatio;canvas.style.width=w+'px';canvas.style.height=h+'px';ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);cx=w/2;cy=h/2-10;R=Math.min(w,h)*0.32;}
+window.addEventListener('resize',()=>{if(document.getElementById('v-smash').classList.contains('on'))resizeSmash();});
+function onHit(ev){const rect=canvas.getBoundingClientRect();const x=ev.clientX-rect.left,y=ev.clientY-rect.top;const dx=x-cx,dy=y-cy,d=Math.hypot(dx,dy);if(d>R*1.15)return;applyWeapon(dx/R,dy/R,d/R);}
+function applyWeapon(nx,ny,rd){const w=weapon;if(w.id==='shield'){S.crust=Math.min(100,S.crust+8);S.xp+=2;edai('Escudo: corteza reforzada.');toast('ESCUDO +');save();syncBars();return;}let dmg=w.pow*(0.7+Math.random()*0.6);if(w.layer==='pierce'||w.layer==='chain'){S.crust=Math.max(0,S.crust-dmg*0.5);if(S.crust<55)S.mantle=Math.max(0,S.mantle-dmg*0.45);if(S.mantle<50)S.core=Math.max(0,S.core-dmg*0.25);}else if(w.layer==='mantle'){S.crust=Math.max(0,S.crust-dmg*0.3);S.mantle=Math.max(0,S.mantle-dmg*0.7);}else if(w.layer==='core'){S.crust=Math.max(0,S.crust-dmg*0.4);S.mantle=Math.max(0,S.mantle-dmg*0.4);S.core=Math.max(0,S.core-dmg*0.6);}else{S.crust=Math.max(0,S.crust-dmg);if(S.crust<30)S.mantle=Math.max(0,S.mantle-dmg*0.3);}if(w.id==='chain'){for(let i=0;i<3;i++){const a=Math.random()*Math.PI*2;craters.push({x:Math.cos(a)*0.7,y:Math.sin(a)*0.7,r:0.08+Math.random()*0.1,col:w.color});}}const kill=Math.floor(S.pop*w.pop*(0.5+Math.random()));S.pop=Math.max(0,S.pop-kill);S.dead+=kill;S.scar++;S.xp+=Math.ceil(dmg/3);S.scars.push(w.name+' −'+Math.floor(dmg));if(S.scars.length>12)S.scars.shift();craters.push({x:nx*(rd||0.6),y:ny*(rd||0.6),r:0.06+dmg/200,col:w.color});for(let i=0;i<18;i++){const a=Math.atan2(ny,nx)+(Math.random()-0.5),sp=2+Math.random()*5+dmg/10;parts.push({x:cx+nx*R*0.9,y:cy+ny*R*0.9,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:40+Math.random()*30,col:w.color});}edai(w.name+' · vivos '+fmt(S.pop)+' · cicatriz #'+S.scar);toast(w.name+' · −'+fmt(kill));save();syncBars();}
+function loop(){requestAnimationFrame(loop);if(!canvas||!ctx)return;const w=canvas.clientWidth,h=canvas.clientHeight;ctx.fillStyle='#02040c';ctx.fillRect(0,0,w,h);ctx.fillStyle='#9ecbff';for(let i=0;i<80;i++){const sx=(i*97+rot*3)%w,sy=(i*53)%h;ctx.globalAlpha=0.3+(i%5)*0.1;ctx.fillRect(sx,sy,1.2,1.2);}ctx.globalAlpha=1;rot+=0.15;const g=ctx.createRadialGradient(cx,cy,R*0.85,cx,cy,R*1.35);g.addColorStop(0,'rgba(56,189,248,0)');g.addColorStop(0.6,'rgba(56,189,248,0.12)');g.addColorStop(1,'rgba(2,6,23,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R*1.35,0,Math.PI*2);ctx.fill();ctx.save();ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.clip();const grd=ctx.createRadialGradient(cx-R*0.3,cy-R*0.3,R*0.1,cx,cy,R);grd.addColorStop(0,'#60a5fa');grd.addColorStop(0.45,'#1d4ed8');grd.addColorStop(0.75,'#14532d');grd.addColorStop(1,'#0f172a');ctx.fillStyle=grd;ctx.fillRect(cx-R,cy-R,R*2,R*2);for(let i=0;i<9;i++){ctx.fillStyle='rgba(22,101,52,0.35)';ctx.beginPath();ctx.ellipse(cx+Math.cos(i)*R*0.45,cy+Math.sin(i*1.3)*R*0.4,R*0.18,R*0.1,i,0,Math.PI*2);ctx.fill();}if(S.crust<70){ctx.globalAlpha=(70-S.crust)/100;ctx.fillStyle='#9a3412';ctx.beginPath();ctx.arc(cx,cy,R*0.72,0,Math.PI*2);ctx.fill();}if(S.mantle<55){ctx.globalAlpha=(55-S.mantle)/90;ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(cx,cy,R*0.38,0,Math.PI*2);ctx.fill();}if(S.core<40){ctx.globalAlpha=0.5;ctx.fillStyle='#e879f9';ctx.beginPath();ctx.arc(cx,cy,R*0.18,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;craters.forEach(c=>{const px=cx+c.x*R,py=cy+c.y*R,rr=c.r*R;ctx.fillStyle='rgba(0,0,0,0.75)';ctx.beginPath();ctx.arc(px,py,rr,0,Math.PI*2);ctx.fill();ctx.strokeStyle=c.col;ctx.globalAlpha=0.5;ctx.lineWidth=2;ctx.beginPath();ctx.arc(px,py,rr*1.1,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1;});ctx.restore();ctx.strokeStyle='rgba(94,234,212,0.35)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.stroke();for(let i=parts.length-1;i>=0;i--){const p=parts[i];p.x+=p.vx;p.y+=p.vy;p.vy+=0.05;p.life--;ctx.globalAlpha=Math.max(0,p.life/50);ctx.fillStyle=p.col;ctx.fillRect(p.x,p.y,2.5,2.5);if(p.life<=0)parts.splice(i,1);}ctx.globalAlpha=1;}
+let bodies=[],sysC,sysCtx,drag=null;
+function initSys(){sysC=document.getElementById('sys');sysCtx=sysC.getContext('2d');resetSys();sysC.addEventListener('pointerdown',e=>{const r=sysC.getBoundingClientRect();const x=(e.clientX-r.left)*(sysC.width/r.width),y=(e.clientY-r.top)*(sysC.height/r.height);drag=bodies.find(b=>Math.hypot(b.x-x,b.y-y)<b.r+12)||null;});sysC.addEventListener('pointermove',e=>{if(!drag)return;const r=sysC.getBoundingClientRect();drag.x=(e.clientX-r.left)*(sysC.width/r.width);drag.y=(e.clientY-r.top)*(sysC.height/r.height);drag.vx=0;drag.vy=0;});sysC.addEventListener('pointerup',()=>drag=null);document.getElementById('sys-reset').onclick=resetSys;document.getElementById('sys-chaos').onclick=()=>{bodies.forEach(b=>{if(b.id!=='sol'){b.vx+=(Math.random()-0.5)*2;b.vy+=(Math.random()-0.5)*2;}});};requestAnimationFrame(sysLoop);}
+function resetSys(){const W=sysC.width,H=sysC.height;bodies=[{id:'sol',x:W/2,y:H/2,r:14,m:1200,vx:0,vy:0,col:'#fbbf24'},{id:'p1',x:W/2+90,y:H/2,r:5,m:3,vx:0,vy:2.1,col:'#38bdf8'},{id:'p2',x:W/2+150,y:H/2,r:7,m:6,vx:0,vy:1.6,col:'#f87171'},{id:'p3',x:W/2+210,y:H/2,r:9,m:10,vx:0,vy:1.3,col:'#a78bfa'},{id:'ast',x:W/2+120,y:H/2-40,r:3,m:1,vx:0.8,vy:1.8,col:'#94a3b8'}];}
+function sysLoop(){requestAnimationFrame(sysLoop);if(!sysCtx)return;const W=sysC.width,H=sysC.height;sysCtx.fillStyle='#000';sysCtx.fillRect(0,0,W,H);const G=0.35;for(let i=0;i<bodies.length;i++)for(let j=i+1;j<bodies.length;j++){const a=bodies[i],b=bodies[j];let dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1;const f=G*a.m*b.m/(d*d);const fx=f*dx/d,fy=f*dy/d;if(drag!==a){a.vx+=fx/a.m;a.vy+=fy/a.m;}if(drag!==b){b.vx-=fx/b.m;b.vy-=fy/b.m;}}bodies.forEach(b=>{if(drag!==b){b.x+=b.vx;b.y+=b.vy;}if(b.x<0||b.x>W)b.vx*=-0.5;if(b.y<0||b.y>H)b.vy*=-0.5;sysCtx.beginPath();sysCtx.arc(b.x,b.y,b.r,0,Math.PI*2);sysCtx.fillStyle=b.col;sysCtx.fill();if(b.id==='sol'){sysCtx.globalAlpha=0.2;sysCtx.beginPath();sysCtx.arc(b.x,b.y,b.r*2.2,0,Math.PI*2);sysCtx.fill();sysCtx.globalAlpha=1;}});}
+function fb(kind){S.fb.push({t:Date.now(),kind,weapon:weapon.id});S.xp+=kind==='ok'?15:5;save();ui();document.getElementById('fb-log').textContent='Feedback '+kind+' ('+S.fb.length+').';document.getElementById('edai-task').textContent=kind==='ok'?'Integrado. Siguiente: CADENA.':kind==='miss'?'Anota qué faltó.':'Descartado.';}
+document.getElementById('fb-ok').onclick=()=>fb('ok');document.getElementById('fb-miss').onclick=()=>fb('miss');document.getElementById('fb-no').onclick=()=>fb('no');
+})();
+</script>
+</body>
+</html>
