@@ -1,0 +1,18 @@
+{
+  "pack": "EDAI_SKILLS_PACK_2026_11_07",
+  "policy": "Capacidad≠Verificación · anti-hype · sandbox-first",
+  "skills": [
+    {"id": "hologramas-4k", "status": "IMPLEMENTED_WEB"},
+    {"id": "autoclicker-cv-sandbox", "status": "IMPLEMENTED_SANDBOX", "note": "solo VOIDCROWN WebView"},
+    {"id": "mutantes-epicos", "status": "IMPLEMENTED_GAME"},
+    {"id": "shields-cisc", "status": "IMPLEMENTED_WEB"},
+    {"id": "cinematicas-45s", "status": "SPEC_PROMPTS"},
+    {"id": "skill-creator", "status": "META"},
+    {"id": "integracion-drive", "status": "OPERATIONAL"},
+    {"id": "audio-waves", "status": "IMPLEMENTED_WEB"},
+    {"id": "vr-ar-fullbody", "status": "SPEC_ONLY"},
+    {"id": "optimizacion", "status": "IMPLEMENTED_WEB"},
+    {"id": "adversarial-audit", "status": "IMPLEMENTED_SCRIPT"},
+    {"id": "exponencial", "status": "META_POLICY"}
+  ]
+}
