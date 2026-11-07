@@ -1,0 +1,3 @@
+Resume: artifacts/CICLO_60_APK/continuum_ciclo60.py resume
+Next: CICLO_60_B_ORBITA_FLOTAS
+APK46 SHA 9658aeb7374ac0e763787cf78b979f0e534f434e5e402c49647bb004cb36f2bb
