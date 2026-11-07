@@ -1,0 +1,14 @@
+266c566ab59552f20a8c28c35d65386207dbea145ace1b34ce6a45b14d8e1a7a  INSTALAR_VOIDCROWN.apk
+
+version: 49.1.0-DEDUP
+size: ~12.5 MiB
+package: com.cisc.voidcrown
+signature: v2+v3 CN=CISC Meta Horizon
+
+DEDUP:
+- single vendor/three.min.js
+- single game/ asset tree
+- no canon_dist duplicates
+- no fx_alive 142MB / cluster 58MB bloat
+
+NOTE: Full 174MB fat pack was lost on sandbox I/O wipe; this is the lean playable rebuild.
