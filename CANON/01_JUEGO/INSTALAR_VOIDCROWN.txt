@@ -1,0 +1,10 @@
+VOIDCROWN 70.0.0 UNIFICADO — UN SOLO APK
+APK: INSTALAR_VOIDCROWN.apk / VOIDCROWN_70.0.0_UNIFICADO.apk
+~29 MB · versionCode 7000 · com.cisc.voidcrown.diazero
+SHA-256: 65cd81e9db9c1bf6aab2bdf39df14fba1dac9c261e8c6f89b4723aa2b32c15be
+
+Entry único: index.html
+Controles: ARCHIVO · FLACKO · KHAOS · SONIDO
+Si conflicto de firma: desinstala la anterior.
+
+https://github.com/cisc13c-ship-it/voidcrownzonazerodiazero/releases/tag/v70.0.0-UNIFICADO
