@@ -1,0 +1,13 @@
+{
+  "tip": "70.0.0-UNIFICADO",
+  "package": "com.cisc.voidcrown.diazero",
+  "versionCode": 7000,
+  "apk": "VOIDCROWN_70.0.0_UNIFICADO.apk",
+  "sha256": "65cd81e9db9c1bf6aab2bdf39df14fba1dac9c261e8c6f89b4723aa2b32c15be",
+  "size_bytes": 30315639,
+  "github": "https://github.com/cisc13c-ship-it/voidcrownzonazerodiazero/releases/tag/v70.0.0-UNIFICADO",
+  "verified_at": "2026-11-10T04:27:00Z",
+  "sha_ok": true,
+  "entry": "assets/www/index.html",
+  "rules": "LEE_ESTO is sole canon; no parallel tips"
+}
