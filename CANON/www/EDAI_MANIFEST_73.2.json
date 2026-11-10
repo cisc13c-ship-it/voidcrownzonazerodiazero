@@ -1,0 +1,21 @@
+{
+  "id": "EDAI-2026-11-10-73.2-COMPILED",
+  "version": "73.2.0-COMPILED",
+  "change": "Compilación limpia post-dedupe: un solo proyecto VOIDCROWN_UNICO, firma v2/v3, zipalign, resources.arsc STORED",
+  "deps": [
+    "www completo",
+    "teatro_brutal",
+    "void_smash",
+    "orbita",
+    "consejo",
+    "index RISK"
+  ],
+  "tests": [
+    "zipalign",
+    "signature v2/v3",
+    "entry teatro",
+    "modules present"
+  ],
+  "rollback": "reinstalar 73.1.0-BRUTAL-LAYERS",
+  "at": "2026-11-10T11:31:30.414451+00:00"
+}
