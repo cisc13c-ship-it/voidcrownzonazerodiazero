@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script src="js/voidcrown_global.js"></script>
+<script src="js/ceremony.js"></script>
+<script src="js/commander_meta.js"></script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<meta name="theme-color" content="#02010a"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<title>VOIDCROWN MANDO GLOBAL 72.1 · Risk · Viejo · KHAOS</title>
+<style>
+:root{
+  --bg:#02010a; --panel:rgba(8,6,14,.92); --line:rgba(255,120,40,.28);
+  --txt:#f8fafc; --muted:#94a3b8; --gold:#fbbf24; --lava:#ff4d1a; --cyan:#22d3ee;
+  --void:#7c3aed; --ok:#34d399; --danger:#ef4444; --ash:#64748b;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#000;color:var(--txt);font-family:system-ui,-apple-system,Segoe UI,sans-serif;overflow:hidden;touch-action:manipulation}
+button{font:inherit;border:0;cursor:pointer;color:inherit}
+
+/* BOOT */
+#boot{background:url('tex/boot_vertical_hq.png') center/cover,#000;position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;justify-content:flex-end;
+  background:#02010a center/cover no-repeat; transition:opacity .7s,visibility .7s}
+#boot.gone{opacity:0;visibility:hidden;pointer-events:none}
+#boot .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,1,10,.35) 0%,rgba(2,1,10,.55) 40%,rgba(2,1,10,.92) 100%)}
+#boot .inner{position:relative;padding:24px 20px 36px;max-width:520px}
+#boot .tag{font-size:10px;letter-spacing:.35em;color:var(--gold);text-transform:uppercase}
+#boot h1{font-size:clamp(28px,7vw,40px);letter-spacing:.06em;line-height:1.05;margin:8px 0 6px;
+  background:linear-gradient(90deg,#fff 20%,var(--gold),var(--lava));-webkit-background-clip:text;color:transparent}
+#boot .sub{color:var(--muted);font-size:14px;line-height:1.55;margin-bottom:14px}
+#boot .story{color:#e2e8f0;font-size:13px;line-height:1.6;border-left:3px solid var(--lava);padding-left:12px;margin-bottom:18px;min-height:3.6em}
+#boot .row{display:flex;gap:10px;flex-wrap:wrap}
+#boot .btn{flex:1;min-width:140px;padding:14px 16px;border-radius:12px;background:linear-gradient(135deg,var(--lava),#b91c1c);font-weight:700;letter-spacing:.04em}
+#boot .btn.ghost{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);font-weight:600}
+#boot .hint{margin-top:10px;font-size:11px;color:var(--ash)}
+
+/* APP */
+#app{position:fixed;inset:0;display:none;flex-direction:column;background:#02010a}
+#app.on{display:flex}
+#top{flex:0 0 auto;padding:10px 12px 6px;background:linear-gradient(180deg,rgba(2,1,10,.96),rgba(2,1,10,.75));
+  border-bottom:1px solid var(--line);z-index:5}
+#top .brand{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#top .brand b{letter-spacing:.12em;font-size:12px;color:var(--gold)}
+#top .brand span{font-size:11px;color:var(--muted)}
+#hud{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px}
+.metric{background:var(--panel);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 10px}
+.metric .k{font-size:9px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.metric .v{font-size:16px;font-weight:700;margin-top:2px}
+#phases{display:flex;gap:4px;margin-top:8px}
+#phases i{flex:1;text-align:center;font-style:normal;font-size:10px;padding:6px 2px;border-radius:8px;
+  background:rgba(255,255,255,.04);color:var(--muted);border:1px solid transparent}
+#phases i.on{color:#fff;border-color:var(--gold);background:rgba(251,191,36,.12)}
+#cas{display:flex;gap:4px;margin-top:8px;align-items:center}
+#cas label{font-size:9px;letter-spacing:.12em;color:var(--muted);width:52px}
+#casBar{display:flex;gap:3px;flex:1}
+#casBar b{flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,.08)}
+#casBar b.on1{background:#22d3ee}#casBar b.on2{background:#34d399}#casBar b.on3{background:#fbbf24}
+#casBar b.on4{background:#ff4d1a}#casBar b.on5{background:#7c3aed;box-shadow:0 0 12px #7c3aed}
+
+#mapWrap{background:url('tiles/terrain_00_hq.jpg') center/cover,#0a0a0f;flex:1;position:relative;min-height:0;background:#02010a center/cover no-repeat;overflow:hidden}
+#mapWrap::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:.18;
+  background:url(tex/grain.png) center/200px repeat;mix-blend-mode:overlay}
+#map{width:100%;height:100%;display:block;touch-action:none}
+#fxFlash{position:absolute;inset:0;pointer-events:none;background:#fff;opacity:0;transition:opacity .08s}
+#fxAsh{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(ellipse at 50% 20%,rgba(255,77,26,.25),transparent 55%);transition:opacity .4s}
+#fxAsh.on{opacity:1}
+#fxRift{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,rgba(124,58,237,.35),transparent 50%);transition:opacity .5s}
+#fxRift.on{opacity:1}
+#mapWrap.khaos-hit{box-shadow:inset 0 0 60px rgba(255,77,26,.45), inset 0 0 120px rgba(124,58,237,.25)}
+#toast{position:absolute;left:50%;top:12px;transform:translateX(-50%);z-index:6;max-width:92%;
+  background:rgba(0,0,0,.72);border:1px solid rgba(255,255,255,.12);padding:8px 12px;border-radius:10px;
+  font-size:12px;text-align:center;opacity:0;transition:opacity .25s;pointer-events:none}
+#toast.on{opacity:1}
+
+#dock{flex:0 0 auto;padding:8px 12px calc(10px + env(safe-area-inset-bottom));
+  background:linear-gradient(0deg,rgba(2,1,10,.98),rgba(2,1,10,.88));border-top:1px solid var(--line);z-index:5}
+#viejo{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px}
+#viejo .avatar{width:36px;height:36px;border-radius:10px;background:url(brand/planet_icon.jpg) center/cover;border:1px solid var(--line);flex:0 0 auto}
+#viejo .line{flex:1;font-size:12px;line-height:1.45;color:#e2e8f0;min-height:2.6em}
+#viejo .viejo-body{flex:1;min-width:0}
+#viejo .viejo-meta{display:flex;gap:8px;align-items:center;margin-bottom:3px;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--ash)}
+#viejo .viejo-meta #viejoMood{color:var(--gold)}
+#viejo.paranoid .avatar{box-shadow:0 0 0 2px rgba(239,68,68,.55)}
+#viejo.heavy .line{color:#cbd5e1}
+#viejo.soft .line{color:#a7f3d0}
+#viejo.offended .line{color:#fdba74}
+#sel{font-size:12px;color:var(--muted);margin-bottom:8px;min-height:1.2em}
+#sel b{color:var(--gold)}
+#acts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+#acts button{padding:12px 8px;border-radius:12px;font-weight:700;font-size:13px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1)}
+#acts button.primary{background:linear-gradient(135deg,var(--lava),#9a3412);border-color:transparent}
+#acts button:disabled{opacity:.35}
+#log{max-height:52px;overflow:hidden;font-size:10px;color:var(--ash);margin-top:6px;line-height:1.35}
+#log div{opacity:.9}
+
+#end{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.78);backdrop-filter:blur(6px)}
+#end.on{display:flex}
+#end .card{width:min(360px,92vw);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;text-align:center}
+#end h2{font-size:22px;margin-bottom:8px}
+#end p{color:var(--muted);font-size:13px;line-height:1.5;margin-bottom:16px}
+#end button{width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--gold),#d97706);color:#111;font-weight:800}
+
+#legend{position:absolute;right:8px;bottom:8px;z-index:4;display:flex;flex-direction:column;gap:3px;
+  background:rgba(0,0,0,.55);padding:6px 8px;border-radius:8px;font-size:9px;max-height:40%;overflow:auto}
+#legend span{display:flex;align-items:center;gap:6px}
+#legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+.mute{background:transparent;border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:4px 8px;font-size:11px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div id="boot">
+  <div class="veil"></div>
+  <div class="inner">
+    <div class="tag">VOIDCROWN · VOIDCROWN UNIFICADO · v70.0.0</div>
+    <h1>DÍA ZERO</h1>
+    <div class="sub">No empieza con una guerra. Empieza cuando la naturaleza deja de obedecer.</div>
+    <div class="story" id="bootStory">El Viejo enciende el Zippo bajo la ceniza…</div>
+    <div class="row">
+      <button class="btn" id="btnPlay">ENTRAR AL MAPA UNIFICADO</button>
+      <button class="btn ghost" id="btnContinue" style="display:none">CONTINUAR</button>
+    </div>
+    <div class="hint">6 facciones · 42 territorios · fenómenos 1–5 · Grieta · una sola experiencia</div>
+  </div>
+</div>
+
+<div id="app">
+  <div id="top">
+    <div class="brand">
+      <b id="cmdTitle">VOIDCROWN Ω</b>
+      <span id="turnLabel">TURNO 1</span>
+      <button class="mute" id="btnSmash" type="button" title="Void Smash" onclick="location.href='modules/void_smash.html'">SMASH</button>
+      <button class="mute" id="btnOrbit" type="button" title="Órbita flotas" onclick="location.href='modules/orbita_flotas.html'">ÓRBITA</button>
+      <button class="mute" type="button" onclick="location.href='modules/consejo.html'">CONSEJO</button>
+      <button class="mute" type="button" onclick="location.href='modules/teatro_brutal.html'">12.5 BRUTAL</button>
+      <button type="button" id="btnKhaos" type="button" title="Módulo KHAOS unificado">KHAOS</button>
+      <button class="mute" id="btnArchivo" type="button" title="Expediente del Viejo">ARCHIVO</button>
+      <button class="mute" id="btnFlacko" type="button" title="Mencionar a Mando Flacko">FLACKO</button>
+      <button class="mute" id="btnMute" type="button">SONIDO</button>
+    </div>
+    <div id="hud">
+      <div class="metric"><div class="k">Nodos / Tropas</div><div class="v" id="mNodes">0</div></div>
+      <div class="metric"><div class="k">Cascada</div><div class="v" id="mCas">0</div></div>
+      <div class="metric"><div class="k">Fase</div><div class="v" id="mPhase">—</div></div>
+    </div>
+    <div id="phases">
+      <i data-p="REINFORCE">Refuerzo</i>
+      <i data-p="ATTACK">Ataque</i>
+      <i data-p="FORTIFY">Mover</i>
+      <i data-p="PHENOM">Fenómeno</i>
+    </div>
+    <div id="cas">
+      <label>KHAOS</label>
+      <div id="casBar"><b></b><b></b><b></b><b></b><b></b></div>
+    </div>
+  </div>
+
+  <div id="mapWrap">
+    <canvas id="map"></canvas>
+    <div id="fxFlash"></div>
+    <div id="fxAsh"></div>
+    <div id="fxRift"></div>
+    <div id="toast"></div>
+    <div id="legend"></div>
+  </div>
+
+  <div id="dock">
+    <div id="viejo">
+      <div class="avatar" title="El Viejo"></div>
+      <div class="viejo-body">
+        <div class="viejo-meta"><span id="viejoMood">tranquilo</span><span id="viejoTag">· radio abierta</span></div>
+        <div class="line" id="viejoLine">La radio chisporrotea…</div>
+      </div>
+    </div>
+    <div id="sel">Toca un territorio.</div>
+    <div id="acts">
+      <button class="primary" id="btnPrimary">Acción</button>
+      <button id="btnSecondary">Secundaria</button>
+      <button id="btnEnd">Fin fase</button>
+    </div>
+    <div id="log"></div>
+  </div>
+</div>
+
+<div id="end">
+  <div class="card">
+    <h2 id="endTitle">Fin</h2>
+    <p id="endText"></p>
+    <button id="btnAgain">NUEVA PARTIDA</button>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+const $ = id => document.getElementById(id);
+const SAVE = 'voidcrown_vs_omega_v70';
+
+const SFX = {
+  pool: [0,1,2,3,4,5,6,7].map(i=>{ const a=new Audio('audio/sfx_'+String(i).padStart(2,'0')+'.wav'); a.preload='auto'; a.volume=0.35; return a; }),
+  i: 0,
+  play(kind){
+    try{
+      if(localStorage.getItem('voidcrown_mute')==='1') return;
+      const a=this.pool[this.i%this.pool.length];
+      this.i++;
+      a.currentTime=0;
+      a.play().catch(()=>{});
+    }catch(e){}
+  }
+};
+function playSfx(kind){ SFX.play(kind); }
+
+
+const SAVE_META = {game:'VS_OMEGA', build:'70.0.0', freeze_ref:'v68-MAGISTRAL'}; // patch 69.0.1 AI gate
+const PHASE_NAME = {REINFORCE:'Refuerzo', ATTACK:'Ataque', FORTIFY:'Mover', PHENOM:'Fenómeno'};
+const FACTION_COLOR = {
+  LEGION:'#22d3ee', VOID:'#64748b', KHAOS:'#ff4d1a', CROWN:'#fbbf24',
+  FENIX:'#f97316', NEXUS:'#a78bfa',
+  ZOMBIE:'#84cc16', MUTANT:'#e11d48', SKENET:'#38bdf8', XENO:'#14b8a6', PRED:'#f43f5e'
+};
+
+
+/* ═══════════════════════════════════════════════════════════
+   EL VIEJO — ARCHIVO MAESTRO + ARCHIVO VIVO
+   Canon ≠ recuerdo ≠ interpretación. Humor = carácter.
+   Estados: veterano|paranoico|traumado|mamon|descompuesto|
+            alucinado|paniqueado|sabio
+   ═══════════════════════════════════════════════════════════ */
+const VIEJO_ARCHIVO = {
+  loaded: null,
+  async load(){
+    try {
+      this.loaded = await fetch('viejo/ARCHIVO_VIVO.json').then(r=>r.json());
+    } catch(e) {
+      this.loaded = null;
+    }
+    return this.loaded;
+  }
+};
+
+/** Líneas por ESTADO (voz callejera MX, no escritor intentando ser chistoso) */
+const VIEJO_BY_STATE = {
+  veterano: [
+    'Yo ya estaba aquí cuando el clima todavía pedía permiso.',
+    'Cuarenta y dos nodos. Seis banderas. No es poesía: es trabajo.',
+    'El grid sangra igual que antes. Solo que ahora tú tienes el radio.'
+  ],
+  paranoico: [
+    '¿Oíste eso? No. Mejor. Si lo oyes es que ya te marcó.',
+    'El comerciante, LEGIÓN, tú… alguien me cambió las piezas.',
+    'Esa luz del tablero no parpadea así por gusto.'
+  ],
+  traumado: [
+    'Flacko… ese cabrón tenía una forma muy particular de cerrar discusiones.',
+    'Terminamos en el suelo. Él decía que ganó. Yo también. Nunca se resolvió.',
+    'Si Mando cruza la grieta… avísame. O no. Todavía no sé qué haría con la cara.'
+  ],
+  mamon: [
+    '¿Eso? Yo lo hubiese tomado en dos turnos. Con una mano. Y sin Zippo.',
+    'Tú vas bien… para ser el que llegó ayer. Yo ya había perdido peores mapas.',
+    'Cuando yo mandaba la radio, el KHAOS pedía cita.'
+  ],
+  descompuesto: [
+    'Yo tenía cuatro. ¡Cuatro! …¿cuatro qué? Eso es lo que estoy tratando de recordar.',
+    'A ver, el nodo… el de… el que… chingada madre, se me fue.',
+    'Estaba contando y me salió el comerciante. O Flacko. O un perro. Da igual.'
+  ],
+  alucinado: [
+    '¿Y si la Grieta-17 no es un agujero sino un recibo que nadie firmó?',
+    'Teorías: el Zippo es un faro. LEGIÓN es un eco. Tú eres el que repite el eco.',
+    'A las 3:33 el tablero cuenta al revés. No me mires así: yo lo vi. Creo.'
+  ],
+  paniqueado: [
+    '¡¿Dónde está el Zippo?! ¡Fue el comerciante! ¡Fue LEGIÓN! ¡Fuiste tú!',
+    'No toques nada. No toques… ok toca pero despacio. ¡DESPACIO!',
+    'Se me está yendo. No el mapa: yo.'
+  ],
+  sabio: [
+    'VOIDCROWN no se lee. Se sobrevive. Y a veces ni eso.',
+    'El día que la naturaleza dejó de obedecer no empezó la guerra: se acabó la excusa.',
+    'Ganar el mapa no te limpia. Solo te da otra radio a la que contestarle.'
+  ]
+};
+
+const VIEJO_EPISODIOS = {
+  patinar_aceite: [
+    'Ese día empecé a patinar y a tirar aceite. No de carro: de persona. Se me iba el piso.',
+    'Patiné feo. Tiré aceite por la boca y por las decisiones. LEGIÓN aún se ríe… o yo lo imagino.'
+  ],
+  ondearse: [
+    'El día que me ondeé no fue broma. Fue paranoia de las que te dejan sin humo en el Zippo.',
+    'Me ondeé tanto que acusé al aire. El aire no contestó. Eso me dio más razón.'
+  ],
+  recuerdos_flacko: [
+    'Flacko y yo… golpes, gritos, orgullo. Después silencio. El silencio pesa más.',
+    'Traumas no es palabra bonita. Es lo que me queda cuando alguien dice su nombre.'
+  ],
+  como_era_voidcrown: [
+    '¿Cómo era VOIDCROWN? Como vivir dentro de un motor que te muele y aún así le echas gasolina.',
+    'No te lo puedo poner en manual. Te lo puedo poner en cicatriz. Elige.'
+  ],
+  cuatro_piezas: [
+    '¡Cuatro, cabrón! No tres. …No me acuerdo de qué. Pero eran cuatro.',
+    'El comerciante me robó una pieza. O yo soy un desgraciado desordenado. Las dos cosas pueden ser verdad.'
+  ],
+  zippo_en_la_mano: [
+    '¿Dónde dejé el Zippo? …Estaba en mi mano. No digas nada. En serio: nada.',
+    'Acusé a medio mundo. El Zippo se reía desde mis dedos. Hijo de su…'
+  ],
+  gift: [
+    'Toma. No preguntes de dónde. Si no te sirve, tampoco me ofendas.',
+    'Lo dejé en la mesa. Hoy no cobro. Mañana no lo prometo.'
+  ],
+  offended: [
+    'Bueno, tampoco tienes que ponerte así.',
+    'Me voy. No es drama: es dignidad barata. Vuelvo. Siempre vuelvo.'
+  ],
+  silence: ['…', 'No. Hoy no.', 'La radio está abierta. Yo no.']
+};
+
+const VIEJO_PHASE = {
+  start: 'como_era_voidcrown',
+  reinforce: 'veterano',
+  attack: 'veterano',
+  fortify: 'veterano',
+  phenom1: 'paranoico',
+  phenom2: 'paranoico',
+  phenom3: 'descompuesto',
+  phenom4: 'paniqueado',
+  phenom5: 'traumado',
+  rift: 'traumado',
+  conquer: 'mamon',
+  win: 'sabio',
+  lose: 'traumado'
+};
+
+const Viejo = {
+  state: 'veterano',
+  zippoInHand: true,
+  flackoHeat: 0,
+  loseStreak: 0,
+  giftGiven: false,
+  offendedUntil: 0,
+  vignetteCD: 0,
+  archivo: null,
+  logExp: [], // expediente vivo en partida
+
+  setState(s){
+    this.state = s;
+    const root = $('viejo');
+    if(root){
+      root.classList.remove('paranoid','heavy','soft','offended');
+      if(s==='paranoico'||s==='paniqueado') root.classList.add('paranoid');
+      if(s==='traumado'||s==='sabio') root.classList.add('heavy');
+      if(s==='mamon'||s==='gift') root.classList.add('soft');
+      if(s==='descompuesto') root.classList.add('offended');
+    }
+    const mood = $('viejoMood');
+    const tag = $('viejoTag');
+    if(mood) mood.textContent = s;
+    if(tag){
+      const tags = {
+        veterano:'· radio de campaña',
+        paranoico:'· lee señales',
+        traumado:'· Flacko / nudillos',
+        mamon:'· se cree la verga',
+        descompuesto:'· se cuatrapea',
+        alucinado:'· vuelo libre',
+        paniqueado:'· se revienta',
+        sabio:'· lucidez breve'
+      };
+      tag.textContent = tags[s] || '· …';
+    }
+  },
+
+  pick(a){ return (!a||!a.length)?'…':a[rnd(0,a.length-1)]; },
+
+  record(kind, text, clase){
+    const c = clase || 'RECUERDO';
+    const entry = {t: state?state.turn:0, kind, state:this.state, text, clase:c, ts: Date.now()};
+    this.logExp.push(entry);
+    if(this.logExp.length>48) this.logExp.shift();
+    try { localStorage.setItem('voidcrown_viejo_exp_v1', JSON.stringify(this.logExp)); } catch(e){}
+    if(c==='HECHO'){
+      this.hechos = this.hechos || [];
+      this.hechos.push(entry);
+      if(this.hechos.length>64) this.hechos.shift();
+      try { localStorage.setItem('voidcrown_viejo_hechos_v1', JSON.stringify(this.hechos)); } catch(e){}
+    }
+    const chip=$('viejoExp'); if(chip) chip.textContent=this.summaryLine();
+  },
+  misremember(hecho){
+    if(!hecho) return null;
+    const twists = [
+      'Yo juro que fue peor… o más barato. Ya no sé.',
+      'En mi cabeza eso duró tres días. El tablero dice un turno. El tablero miente más bonito.',
+      '¿Fue '+(hecho.kind||'eso')+'? Yo lo recuerdo como otra cosa. No me corrijas.',
+      'Si Flacko estuviera, diría que yo empecé. Siempre dice eso.'
+    ];
+    let twist = twists[rnd(0, twists.length-1)];
+    if(this.flackoHeat<=0 && twist.indexOf('Flacko')>=0) twist = twists[0];
+    const text = 'RECUERDO (puede fallar): '+twist+' / ref: '+(hecho.kind||'?')+' t'+(hecho.t||0);
+    this.record('misremember', text, 'RECUERDO');
+    say(text);
+    return text;
+  },
+  loadExp(){
+    try {
+      const raw=localStorage.getItem('voidcrown_viejo_exp_v1');
+      this.logExp = raw ? (JSON.parse(raw)||[]) : [];
+    } catch(e){ this.logExp=[]; }
+    try {
+      const h=localStorage.getItem('voidcrown_viejo_hechos_v1');
+      this.hechos = h ? (JSON.parse(h)||[]) : [];
+    } catch(e){ this.hechos=[]; }
+    const chip=$('viejoExp'); if(chip) chip.textContent=this.summaryLine();
+    return this.logExp;
+  },
+  summaryLine(){
+    const n=(this.logExp||[]).length;
+    const nh=(this.hechos||[]).length;
+    if(!n && !nh) return 'Sin HECHOS ni RECUERDOS · el tablero aún no escribe';
+    const last=(this.logExp&&this.logExp.length)?this.logExp[this.logExp.length-1]:null;
+    const tail=last?((last.clase||'?')+': '+(last.kind||'?')+' t'+(last.t||0)):'—';
+    return 'H'+nh+'/R'+n+' · '+tail;
+  },
+  dumpCanonNote(){
+    const a=this.archivo;
+    if(!a) return 'Archivo no cargado. Clases: HECHO / RECUERDO / PENDIENTE.';
+    const pend=(a.pendiente||[]).slice(0,2).join(' · ');
+    return 'Archivo Vivo · HECHO≠RECUERDO≠PENDIENTE. Pendiente: '+(pend||'—')+' (no se inventa).';
+  },
+
+  /** Deriva estado desde hechos del tablero (no random puro) */
+  deriveFromBoard(hint){
+    if(hint) return hint;
+    if(!state) return 'veterano';
+    if(state.rift || state.cascade>=5) return 'traumado';
+    if(state.cascade>=4) return Math.random()<0.5?'paniqueado':'paranoico';
+    if(state.cascade>=3) return Math.random()<0.4?'descompuesto':'paranoico';
+    if(this.flackoHeat>0){ this.flackoHeat--; return 'traumado'; }
+    if(this.loseStreak>=2) return 'descompuesto';
+    if(state.turn>1 && state.turn%11===0) return 'alucinado';
+    if(state.turn%7===0) return 'mamon';
+    if(ownedBy('LEGION').length >= ((W.victory&&W.victory.control_territories)||14)-2) return 'sabio';
+    return 'veterano';
+  },
+
+  lineForState(st){
+    return this.pick(VIEJO_BY_STATE[st] || VIEJO_BY_STATE.veterano);
+  },
+
+  speak(theme, forceState){
+    // offended lock
+    if(state && state.turn < this.offendedUntil && !forceState){
+      this.setState('descompuesto');
+      const line = this.pick(VIEJO_EPISODIOS.offended);
+      say(line); this.record('offended', line); return line;
+    }
+
+    // episodic themes
+    if(theme === 'flacko' || theme === 'recuerdos_flacko'){
+      this.flackoHeat = 3;
+      this.setState('traumado');
+      let line;
+      if(Math.random()<0.3){ line = this.pick(VIEJO_EPISODIOS.silence); }
+      else line = this.pick(VIEJO_EPISODIOS.recuerdos_flacko.concat(VIEJO_BY_STATE.traumado));
+      say(line); this.record('flacko', line); return line;
+    }
+    if(theme === 'rift' || theme === 'phenom5'){
+      this.setState('traumado');
+      const line = this.pick(VIEJO_EPISODIOS.recuerdos_flacko.concat(VIEJO_BY_STATE.traumado));
+      say(line); this.record('grieta', line); return line;
+    }
+    if(theme && theme.startsWith('phenom')){
+      const st = VIEJO_PHASE[theme] || this.deriveFromBoard();
+      this.setState(st);
+      let line = this.lineForState(st);
+      if(theme==='phenom3' && Math.random()<0.45) line = this.pick(VIEJO_EPISODIOS.patinar_aceite);
+      if(theme==='phenom4' && Math.random()<0.5) line = this.pick(VIEJO_EPISODIOS.ondearse);
+      say(line); this.record(theme, line); return line;
+    }
+    if(theme === 'start' || theme === 'como_era_voidcrown'){
+      this.setState('sabio');
+      const line = this.pick(VIEJO_EPISODIOS.como_era_voidcrown.concat(VIEJO_BY_STATE.sabio));
+      say(line); this.record('voidcrown', line); return line;
+    }
+    if(theme === 'conquer'){
+      this.setState(Math.random()<0.55?'mamon':'veterano');
+      const line = this.lineForState(this.state);
+      say(line); this.record('conquer', line); return line;
+    }
+    if(theme === 'win' || theme === 'lose'){
+      this.setState(theme==='win'?'sabio':'traumado');
+      const pool = theme==='win' ? VIEJO_BY_STATE.sabio : VIEJO_BY_STATE.traumado;
+      const line = this.pick(pool);
+      say(line); this.record(theme, line); return line;
+    }
+
+    const st = forceState || this.deriveFromBoard(VIEJO_PHASE[theme]);
+    this.setState(st);
+    const line = this.lineForState(st);
+    say(line); this.record(theme||'board', line); return line;
+  },
+
+  maybeVignette(){
+    if(!state) return;
+    if(this.vignetteCD>0){ this.vignetteCD--; return; }
+    if(state.phase==='PHENOM' || state.rift) return;
+    if(Math.random()>0.16) return;
+    this.vignetteCD = 2+rnd(1,2);
+    const r = Math.random();
+    if(r<0.25){
+      this.setState('descompuesto');
+      const line = this.pick(VIEJO_EPISODIOS.cuatro_piezas);
+      say(line); this.record('cuatro', line);
+      log('Episodio: las cuatro piezas.');
+    } else if(r<0.48){
+      this.zippoInHand = false;
+      this.setState('paniqueado');
+      const line = this.pick(VIEJO_EPISODIOS.zippo_en_la_mano);
+      say(line); this.record('zippo', line);
+      log('Episodio: Zippo perdido (en su mano).');
+      setTimeout(()=>{
+        this.zippoInHand = true;
+        this.setState('descompuesto');
+        const l2 = '…Estaba en mi mano. No digas nada.';
+        say(l2); this.record('zippo_end', l2);
+      }, 3000);
+    } else if(r<0.62){
+      this.setState('descompuesto');
+      const line = this.pick(VIEJO_EPISODIOS.patinar_aceite);
+      say(line); this.record('aceite', line);
+      log('Episodio: patinar y tirar aceite.');
+    } else if(r<0.74){
+      this.setState('paranoico');
+      const line = this.pick(VIEJO_EPISODIOS.ondearse);
+      say(line); this.record('ondeo', line);
+      log('Episodio: el día que se ondeó.');
+    } else if(r<0.86 && !this.giftGiven){
+      this.giftGiven = true;
+      this.setState('mamon');
+      const line = this.pick(VIEJO_EPISODIOS.gift);
+      say(line); this.record('gift', line);
+      const mine = ownedBy('LEGION');
+      if(mine.length){
+        const tt = mine[rnd(0,mine.length-1)];
+        tt.armies += 1;
+        log('El Viejo dejó algo en la mesa → +1 '+tt.name);
+        draw(); updateHUD();
+      }
+    } else {
+      this.offendedUntil = state.turn + 1;
+      this.setState('descompuesto');
+      const line = this.pick(VIEJO_EPISODIOS.offended);
+      say(line); this.record('offended', line);
+    }
+  },
+
+  fact(kind, detail){
+    const text = detail || kind;
+    this.record(kind, text, 'HECHO');
+    log('HECHO: '+text);
+    if(Math.random()<0.22){
+      const last = (this.hechos||[])[(this.hechos||[]).length-1];
+      setTimeout(()=>{ try{ this.misremember(last); }catch(e){} }, 900);
+    }
+  },
+  onPlayerMentionFlacko(){ this.speak('flacko'); },
+
+  onLostNode(){ this.loseStreak++; this.setState(this.loseStreak>=2?'descompuesto':'paranoico'); const line=this.lineForState(this.state); say(line); this.record('loss_node', line); },
+  onConquer(){ this.loseStreak=0; this.speak('conquer'); }
+};
+
+// compat arrays for any leftover VIEJO.x[i]
+const VIEJO = new Proxy({}, {
+  get(_t, prop){
+    if(prop in VIEJO_BY_STATE) return VIEJO_BY_STATE[prop];
+    if(prop in VIEJO_EPISODIOS) return VIEJO_EPISODIOS[prop];
+    if(prop === 'start') return VIEJO_EPISODIOS.como_era_voidcrown;
+    return ['…'];
+  }
+});
+
+
+
+
+
+let W=null, state=null, sel=null, sel2=null, placeLeft=0;
+let cam={x:0,y:0,s:1}, drag=null, particles=[], shake=0;
+let audioCtx=null, muted=false, bootFrame=0, bootTimer=null;
+
+function rnd(a,b){return a+Math.floor(Math.random()*(b-a+1))}
+function d6(){return rnd(1,6)}
+function say(l){$('viejoLine').textContent=l}
+function log(m){
+  const e=document.createElement('div'); e.textContent=m;
+  $('log').insertBefore(e,$('log').firstChild);
+  while($('log').children.length>8) $('log').removeChild($('log').lastChild);
+}
+function toast(msg, ms){
+  const t=$('toast'); t.textContent=msg; t.classList.add('on');
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('on'), ms||1800);
+}
+function flash(a){const f=$('fxFlash'); f.style.opacity=a; setTimeout(()=>f.style.opacity=0, 90)}
+function pulseAsh(on){$('fxAsh').classList.toggle('on', !!on)}
+function pulseRift(on){$('fxRift').classList.toggle('on', !!on)}
+
+/* —— audio synth (no external wav required) —— */
+function ensureAudio(){
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==='suspended') audioCtx.resume();
+}
+function beep(freq, dur, type, vol){
+  if(muted) return;
+  try{
+    ensureAudio();
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.type=type||'sawtooth'; o.frequency.value=freq;
+    g.gain.value=vol||0.04;
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start();
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+(dur||0.15));
+    o.stop(audioCtx.currentTime+(dur||0.15)+0.02);
+  }catch(e){}
+}
+function sfx(kind){
+  if(kind==='hit'){ beep(90,.12,'square',.05); beep(60,.18,'sawtooth',.03); }
+  else if(kind==='place'){ beep(220,.08,'triangle',.04); }
+  else if(kind==='win'){ beep(440,.1,'sine',.05); setTimeout(()=>beep(660,.15,'sine',.05),100); }
+  else if(kind==='lose'){ beep(80,.3,'sawtooth',.06); }
+  else if(kind==='rift'){ beep(40,.4,'sawtooth',.07); setTimeout(()=>beep(30,.5,'square',.05),200); }
+  else if(kind==='phenom'){ beep(120,.2,'triangle',.05); }
+}
+
+/* —— world helpers —— */
+function factionsPlayable(){return Object.values(W.factions).filter(f=>!f.invader)}
+function terrById(id){return state.territories.find(t=>t.id===+id)}
+function ownedBy(fid){return state.territories.filter(t=>t.owner===fid)}
+function neighbors(id){return (W.adjacency[String(id)]||[]).map(Number)}
+function isAdj(a,b){return neighbors(a).includes(+b)}
+function incomeOf(fid){
+  const mine=ownedBy(fid);
+  let n=Math.max(3, Math.floor(mine.length/3));
+  const cont=W.continents||{};
+  Object.keys(cont).forEach(c=>{
+    const ids=(cont[c].territories||[]).map(Number);
+    if(ids.length && ids.every(id=>{const tt=terrById(id); return tt&&tt.owner===fid})) n+=(cont[c].bonus||2);
+  });
+  // scar penalty
+  mine.forEach(t=>{ if((t.scar||0)>=2) n=Math.max(0,n-1); });
+  if(fid==='LEGION') n+=1; return Math.max(2,n);
+}
+
+function initState(){
+  const terrs=W.territories.map(t=>({id:t.id,name:t.name,continent:t.continent,owner:null,armies:0,scar:0,riftMark:false}));
+  const ids=terrs.map(t=>t.id);
+  for(let i=ids.length-1;i>0;i--){const j=rnd(0,i); [ids[i],ids[j]]=[ids[j],ids[i]]}
+  const order=['LEGION','VOID','KHAOS','CROWN','FENIX','NEXUS'];
+  ids.forEach((id,i)=>{
+    const t=terrs.find(x=>x.id===id);
+    t.owner=order[i%6]; t.armies=(order[i%6]==='LEGION'?3:2)+rnd(0,1);
+  });
+  state={
+    turn:1, phase:'REINFORCE', current:'LEGION', cascade:0, rift:false,
+    territories:terrs, over:null, placeLeft:0, lastPhenom:null, enigmaSeen:false
+  };
+  placeLeft=incomeOf('LEGION'); state.placeLeft=placeLeft;
+  sel=null; sel2=null;
+}
+
+function save(){
+  try{
+    state.placeLeft=placeLeft;
+    state._meta = Object.assign({}, SAVE_META, {savedAt: Date.now(), turn: state.turn, cascade: state.cascade, rift: !!state.rift});
+    localStorage.setItem(SAVE, JSON.stringify(state));
+    localStorage.setItem(SAVE+'__chk', '42:'+String(state.turn));
+  }catch(e){}
+}
+function loadSave(){
+  try{
+    const raw=localStorage.getItem(SAVE);
+    if(!raw) return false;
+    const s=JSON.parse(raw);
+    if(!s||!s.territories||s.territories.length!==42||s.over) return false;
+    let ok=true;
+    s.territories.forEach(tt=>{ if(tt.armies==null||tt.armies<0||!tt.owner) ok=false; });
+    if(!ok){ log('HECHO: save corrupto — no se cargó'); return false; }
+    state=s; placeLeft=s.placeLeft||0;
+    try{ Viejo.fact('load_ok', 'Partida recuperada t'+(s.turn||'?')+' cascada '+(s.cascade||0)); }catch(e){}
+    return true;
+  }catch(e){ return false; }
+}
+
+function playerTroops(){return ownedBy('LEGION').reduce((s,t)=>s+t.armies,0)}
+function livingFactions(){
+  const set=new Set(state.territories.map(t=>t.owner));
+  return [...set].filter(f=>f && !(W.factions[f]||{}).invader);
+}
+
+function checkVictory(){
+  const leg=ownedBy('LEGION').length;
+  const need=(W.victory&&W.victory.control_territories)||14;
+  if(leg>=need){ endGame(true); return true; }
+  if(leg===0){ endGame(false); return true; }
+  const live=livingFactions();
+  if(live.length===1 && live[0]==='LEGION'){ endGame(true); return true; }
+  // continent victory
+  const needC=(W.victory&&W.victory.or_continents)||0;
+  if(needC>0){
+    let got=0;
+    const cont=W.continents||{};
+    Object.keys(cont).forEach(c=>{
+      const ids=(cont[c].territories||[]).map(Number);
+      if(ids.length && ids.every(id=>{const tt=terrById(id);return tt&&tt.owner==='LEGION'})) got++;
+    });
+    if(got>=needC){ endGame(true); return true; }
+  }
+  return false;
+}
+
+function endGame(win){
+  try{ if(window.VCGlobal){ VCGlobal.emit(win?'RISK_VICTORY':'RISK_ATTACK',{won:!!win,msg:win?'Victoria Día Zero':'Derrota Día Zero'}); } }catch(e){}
+
+  state.over=win?'win':'lose'; save();
+  $('endTitle').textContent=win?'VICTORIA':'DERROTA';
+  $('endText').textContent=win?VIEJO.win[0]:VIEJO.lose[0];
+  Viejo.speak(win?'win':'lose');
+  sfx(win?'win':'lose');
+  $('end').classList.add('on');
+}
+
+function updateCasBar(){
+  const b=$('casBar').children;
+  for(let i=0;i<5;i++) b[i].className = i<state.cascade ? ('on'+(i+1)) : '';
+}
+
+
+/* VOIDCROWN global: apply orbital troop bank once per reinforce entry */
+function VC_ORBIT_BANK(){
+  try{
+    if(!window.VCGlobal) return;
+    if(state.current!=='LEGION') return;
+    if(state.phase!=='REINFORCE' && state.phase!=='reinforce') return;
+    if(state._bankApplied) return;
+    const n=VCGlobal.consumeTroopBank();
+    if(n>0){
+      placeLeft=(placeLeft||0)+n;
+      state.placeLeft=placeLeft;
+      state._bankApplied=true;
+      try{log('ÓRBITA→RISK: +'+n+' refuerzos del troop bank'); toast('+'+n+' desde Órbita');}catch(e){}
+    }
+  }catch(e){}
+}
+
+function updateHUD(){ VC_ORBIT_BANK();
+  $('turnLabel').textContent='TURNO '+state.turn+' · '+(state.current==='LEGION'?'TÚ':((W.factions[state.current]||{}).name||state.current));
+  const need=(W.victory&&W.victory.control_territories)||14;
+  const nodes=ownedBy('LEGION').length;
+  if($('mNodes')) $('mNodes').textContent=nodes+'/'+need+' · '+playerTroops();
+  else if($('mTroops')) $('mTroops').textContent=String(playerTroops());
+  $('mCas').textContent=String(state.cascade)+(state.rift?' ↯':'');
+  $('mPhase').textContent=PHASE_NAME[state.phase]||state.phase;
+  updateCasBar();
+  document.querySelectorAll('#phases i').forEach(el=>el.classList.toggle('on', el.getAttribute('data-p')===state.phase));
+  pulseAsh(state.cascade>=3);
+  pulseRift(!!state.rift);
+
+  const p=$('btnPrimary'), s=$('btnSecondary'), e=$('btnEnd');
+  p.disabled=false; s.disabled=false; e.disabled=false;
+  if(state.current!=='LEGION'){
+    p.textContent='…IA'; p.disabled=true; s.disabled=true; e.disabled=true;
+    $('sel').textContent='Facciones bajo la ceniza…';
+    return;
+  }
+  if(state.phase==='REINFORCE'){
+    p.textContent='Colocar +1';
+    $('sel').innerHTML=sel?('Colocar en <b>'+sel.name+'</b> · quedan <b>'+placeLeft+'</b>'):('Refuerzos <b>'+placeLeft+'</b> · toca un territorio tuyo');
+    s.textContent='Auto'; e.textContent='Listo';
+  } else if(state.phase==='ATTACK'){
+    p.textContent='Atacar';
+    $('sel').innerHTML=!sel?'Origen (≥2 tropas)':(!sel2?('Desde <b>'+sel.name+'</b> → elige enemigo adyacente'):('<b>'+sel.name+'</b> → <b>'+sel2.name+'</b>'));
+    s.textContent='Cancelar'; e.textContent='Fin ataque';
+  } else if(state.phase==='FORTIFY'){
+    p.textContent='Mover 1';
+    $('sel').innerHTML=!sel?'Origen (≥2)':(!sel2?('Desde <b>'+sel.name+'</b> → aliado adyacente'):('<b>'+sel.name+'</b> → <b>'+sel2.name+'</b>'));
+    s.textContent='Cancelar'; e.textContent='Saltar';
+  } else if(state.phase==='PHENOM'){
+    p.textContent='Invocar clima';
+    $('sel').textContent='El KHAOS responde al tablero. Cascada actual: '+state.cascade;
+    s.textContent='—'; s.disabled=true; e.textContent='Pasar';
+  }
+}
+
+function buildLegend(){
+  const el=$('legend'); el.innerHTML='';
+  const order=['LEGION','VOID','KHAOS','CROWN','FENIX','NEXUS'];
+  order.forEach(fid=>{
+    const f=W.factions[fid]; if(!f) return;
+    const sp=document.createElement('span');
+    sp.innerHTML='<i style="background:'+(FACTION_COLOR[fid]||'#fff')+'"></i>'+(f.name||fid);
+    el.appendChild(sp);
+  });
+}
+
+/* —— map render —— */
+function worldToScreen(px,py,w,h,bounds){
+  const {minX,minY,maxX,maxY}=bounds;
+  const pad=36;
+  const sc=Math.min((w-pad*2)/(maxX-minX||1),(h-pad*2)/(maxY-minY||1))*cam.s;
+  const ox=pad+(w-pad*2-(maxX-minX)*sc)/2+cam.x;
+  const oy=pad+(h-pad*2-(maxY-minY)*sc)/2+cam.y;
+  return {x:ox+(px-minX)*sc, y:oy+(py-minY)*sc, sc};
+}
+function boundsOf(){
+  let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9;
+  state.territories.forEach(t=>{
+    const p=W.positions[String(t.id)]||{x:250,y:250};
+    minX=Math.min(minX,p.x); minY=Math.min(minY,p.y);
+    maxX=Math.max(maxX,p.x); maxY=Math.max(maxY,p.y);
+  });
+  return {minX,minY,maxX,maxY};
+}
+
+function draw(){
+  const c=$('map'), ctx=c.getContext('2d');
+  const dpr=Math.min(window.devicePixelRatio||1, 2);
+  const w=c.clientWidth, h=c.clientHeight;
+  if(w<2||h<2) return;
+  c.width=Math.floor(w*dpr); c.height=Math.floor(h*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+
+  // shake
+  if(shake>0){ ctx.translate((Math.random()-.5)*shake, (Math.random()-.5)*shake); shake*=0.85; if(shake<0.3) shake=0; }
+
+  ctx.clearRect(0,0,w,h);
+  // vignette base
+  const g=ctx.createRadialGradient(w/2,h/2,h*0.1,w/2,h/2,h*0.75);
+  g.addColorStop(0,'rgba(2,8,20,0.15)'); g.addColorStop(1,'rgba(2,1,10,0.55)');
+  ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+
+  const bounds=boundsOf();
+  const pts=state.territories.map(t=>{
+    const p=W.positions[String(t.id)]||{x:250,y:250};
+    const s=worldToScreen(p.x,p.y,w,h,bounds);
+    return {t, x:s.x, y:s.y, sc:s.sc};
+  });
+  const byId={}; pts.forEach(p=>byId[p.t.id]=p);
+
+  // edges
+  ctx.lineWidth=1.2; ctx.strokeStyle='rgba(148,163,184,0.22)';
+  state.territories.forEach(t=>{
+    const a=byId[t.id]; if(!a) return;
+    neighbors(t.id).forEach(nid=>{
+      if(nid<=t.id) return;
+      const b=byId[nid]; if(!b) return;
+      ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+    });
+  });
+
+  // nodes
+  pts.forEach(p=>{
+    const t=p.t;
+    const col=FACTION_COLOR[t.owner]||'#fff';
+    const r=Math.max(10, 12 + Math.min(8, t.armies*0.7));
+    // scar ring
+    if(t.scar>0){
+      ctx.beginPath(); ctx.arc(p.x,p.y,r+4+t.scar*2,0,Math.PI*2);
+      ctx.strokeStyle=t.scar>=2?'rgba(255,77,26,0.7)':'rgba(251,191,36,0.5)';
+      ctx.lineWidth=2; ctx.stroke();
+    }
+    if(t.riftMark){
+      ctx.beginPath(); ctx.arc(p.x,p.y,r+8,0,Math.PI*2);
+      ctx.strokeStyle='rgba(124,58,237,0.85)'; ctx.lineWidth=2; ctx.stroke();
+    }
+    // glow
+    const grd=ctx.createRadialGradient(p.x,p.y,1,p.x,p.y,r*2.2);
+    grd.addColorStop(0,col); grd.addColorStop(1,'transparent');
+    ctx.fillStyle=grd; ctx.globalAlpha=0.35; ctx.beginPath(); ctx.arc(p.x,p.y,r*2.2,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha=1;
+    // body
+    ctx.beginPath(); ctx.arc(p.x,p.y,r,0,Math.PI*2);
+    ctx.fillStyle=col; ctx.fill();
+    ctx.lineWidth=(sel&&sel.id===t.id)||(sel2&&sel2.id===t.id)?3:1.2;
+    ctx.strokeStyle=(sel&&sel.id===t.id)?'#fff':(sel2&&sel2.id===t.id)?varGold():'rgba(0,0,0,0.5)';
+    ctx.stroke();
+    // armies
+    ctx.fillStyle='#0b0b0f'; ctx.font='bold '+(r>14?12:10)+'px system-ui';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(String(t.armies), p.x, p.y);
+  });
+
+  // labels for selected / hover scale
+  if(sel){
+    const p=byId[sel.id];
+    if(p){
+      ctx.font='11px system-ui'; ctx.fillStyle='#f8fafc'; ctx.textAlign='center';
+      ctx.fillText(sel.name, p.x, p.y - (14+Math.min(8,sel.armies*0.7)) - 8);
+    }
+  }
+
+  // particles
+  particles=particles.filter(pt=>pt.life>0);
+  particles.forEach(pt=>{
+    pt.life-=0.02; pt.y+=pt.vy; pt.x+=pt.vx;
+    ctx.globalAlpha=Math.max(0,pt.life);
+    ctx.fillStyle=pt.color;
+    ctx.fillRect(pt.x,pt.y,2,2);
+  });
+  ctx.globalAlpha=1;
+
+  if(particles.length||shake>0) requestAnimationFrame(draw);
+}
+function varGold(){return '#fbbf24'}
+
+function spawnBurst(x,y,color,n){
+  for(let i=0;i<(n||12);i++){
+    particles.push({x,y,vx:(Math.random()-.5)*3,vy:(Math.random()-.5)*3-1,life:1,color:color||'#ff4d1a'});
+  }
+  requestAnimationFrame(draw);
+}
+
+function pickTerritory(clientX, clientY){
+  const c=$('map'); const rect=c.getBoundingClientRect();
+  const x=clientX-rect.left, y=clientY-rect.top;
+  const w=c.clientWidth, h=c.clientHeight;
+  const bounds=boundsOf();
+  let best=null, bestD=1e9;
+  state.territories.forEach(t=>{
+    const p=W.positions[String(t.id)]||{x:250,y:250};
+    const s=worldToScreen(p.x,p.y,w,h,bounds);
+    const d=(s.x-x)*(s.x-x)+(s.y-y)*(s.y-y);
+    const r=Math.max(14, 16+Math.min(8,t.armies*0.7));
+    if(d<r*r && d<bestD){ best=t; bestD=d; }
+  });
+  return best;
+}
+
+function setupMap(){
+  const wrap=$('mapWrap');
+  const c=$('map');
+  // background
+  wrap.style.backgroundImage="url(tiles/terrain_00.jpg), url(tex/map_tactical.png), url(tex/cine_apocalypse.png)";
+  wrap.style.backgroundSize='cover';
+  wrap.style.backgroundPosition='center';
+
+  let moved=false;
+  c.addEventListener('pointerdown', ev=>{
+    moved=false;
+    drag={x:ev.clientX,y:ev.clientY,cx:cam.x,cy:cam.y};
+    c.setPointerCapture(ev.pointerId);
+  });
+  c.addEventListener('pointermove', ev=>{
+    if(!drag) return;
+    const dx=ev.clientX-drag.x, dy=ev.clientY-drag.y;
+    if(Math.abs(dx)+Math.abs(dy)>8) moved=true;
+    cam.x=drag.cx+dx; cam.y=drag.cy+dy; draw();
+  });
+  c.addEventListener('pointerup', ev=>{
+    if(!drag) return;
+    const wasDrag=moved; drag=null;
+    if(wasDrag) return;
+    if(state.current!=='LEGION'||state.over) return;
+    const t=pickTerritory(ev.clientX, ev.clientY);
+    if(!t) return;
+    onPick(t);
+  });
+  c.addEventListener('wheel', ev=>{
+    ev.preventDefault();
+    cam.s=Math.max(0.7, Math.min(2.2, cam.s*(ev.deltaY>0?0.92:1.08)));
+    draw();
+  }, {passive:false});
+}
+
+function onPick(t){
+  if(state.phase==='REINFORCE'){
+    if(t.owner!=='LEGION'){ toast('Solo en territorio LEGIÓN'); return; }
+    sel=t; updateHUD(); draw(); return;
+  }
+  if(state.phase==='ATTACK'){
+    if(!sel){
+      if(t.owner!=='LEGION'||t.armies<2){ toast('Origen: tuyo con ≥2'); return; }
+      sel=t; sel2=null; updateHUD(); draw(); return;
+    }
+    if(!sel2){
+      if(t.id===sel.id){ sel=null; updateHUD(); draw(); return; }
+      if(t.owner==='LEGION'){ toast('Elige enemigo'); return; }
+      if(!isAdj(sel.id,t.id)){ toast('No adyacente'); return; }
+      sel2=t; updateHUD(); draw(); return;
+    }
+    sel=t.owner==='LEGION'&&t.armies>=2?t:sel; sel2=null; updateHUD(); draw(); return;
+  }
+  if(state.phase==='FORTIFY'){
+    if(!sel){
+      if(t.owner!=='LEGION'||t.armies<2){ toast('Origen ≥2'); return; }
+      sel=t; sel2=null; updateHUD(); draw(); return;
+    }
+    if(!sel2){
+      if(t.owner!=='LEGION'||!isAdj(sel.id,t.id)){ toast('Aliado adyacente'); return; }
+      sel2=t; updateHUD(); draw(); return;
+    }
+    sel=t; sel2=null; updateHUD(); draw();
+  }
+}
+
+function attack(from,to){
+  playSfx('attack');
+  // state.current is the acting faction; must match origin owner
+  if(!from||!to) return;
+  if(from.owner!==state.current||to.owner===from.owner||from.armies<2||!isAdj(from.id,to.id)) return;
+  let aN=Math.min(3,from.armies-1), dN=Math.min(2,to.armies);
+  let aD=[], dD=[];
+  for(let i=0;i<aN;i++) aD.push(d6());
+  for(let i=0;i<dN;i++) dD.push(d6());
+  aD.sort((x,y)=>y-x); dD.sort((x,y)=>y-x);
+  let aL=0, dL=0;
+  for(let i=0;i<Math.min(aD.length,dD.length);i++){ if(aD[i]>dD[i]) dL++; else aL++; }
+  from.armies-=aL; to.armies-=dL;
+  log(from.name+' ['+aD+'] vs '+to.name+' ['+dD+'] (−'+aL+'/−'+dL+')');
+  flash(0.12); sfx('hit'); shake=6;
+  // particle at target
+  const c=$('map'); const bounds=boundsOf();
+  const p=W.positions[String(to.id)]||{x:250,y:250};
+  const s=worldToScreen(p.x,p.y,c.clientWidth,c.clientHeight,bounds);
+  spawnBurst(s.x,s.y, FACTION_COLOR[from.owner], 16);
+
+  if(to.armies<=0){
+    const prev=to.owner; to.owner=from.owner; to.armies=0;
+    const mv=Math.max(1, Math.min(from.armies-1, aN));
+    from.armies-=mv; to.armies=mv;
+    log('¡'+to.name+' cae! '+prev+' → '+from.owner);
+    if(prev==='LEGION' && from.owner!=='LEGION'){ try{Viejo.onLostNode()}catch(e){} }
+    if(from.owner==='LEGION'){ try{Viejo.onConquer()}catch(e){} }
+    toast(to.name+' conquistado');
+    if(from.owner==='LEGION' && Math.random()<0.22){
+      state.cascade=Math.min(5, state.cascade+1);
+      log('Cascada +1 por presión de guerra');
+    }
+    // MANDO GLOBAL
+    try{
+      if(window.VCGlobal){
+        if(from.owner==='LEGION') VCGlobal.emit('RISK_CONQUEST',{territory:to.name,id:to.id,msg:'Conquista '+to.name});
+        else VCGlobal.emit('RISK_ATTACK',{won:true,territory:to.name,msg:'IA conquista '+to.name});
+      }
+    }catch(e){}
+  } else {
+    try{ if(window.VCGlobal && from.owner==='LEGION') VCGlobal.emit('RISK_ATTACK',{won:false,territory:to.name,msg:'Ataque a '+to.name}); }catch(e){}
+  }
+  save(); draw(); updateHUD(); checkVictory();
+}
+
+function fortify(from,to){
+  if(from.owner!=='LEGION'||to.owner!=='LEGION'||from.armies<2||!isAdj(from.id,to.id)) return;
+  from.armies--; to.armies++;
+  log('Mueve 1: '+from.name+' → '+to.name);
+  sfx('place'); save(); draw(); updateHUD();
+}
+
+
+function khaosStrike(targets){
+  if(!state) return;
+  playSfx('khaos');
+  // absorbed FX layers (space/flow) as map flash textures once
+  try {
+    if(!window._fxSpace){ window._fxSpace=new Image(); window._fxSpace.src='fx/space_0.png'; }
+    if(!window._fxFlow){ window._fxFlow=new Image(); window._fxFlow.src='fx/flow_0.png'; }
+    if(!window._fxMeteor){ window._fxMeteor=new Image(); window._fxMeteor.src='fx/meteor_sheet.png'; }
+  } catch(e){}
+  shake = Math.max(shake, 10);
+  flash(0.28);
+  pulseAsh(true);
+  setTimeout(()=>pulseAsh(state && state.cascade>=3), 500);
+  const c=$('map'); if(!c) return;
+  const bounds=boundsOf();
+  (targets||[]).forEach(tg=>{
+    const p=W.positions[String(tg.id)]||{x:250,y:250};
+    const s=worldToScreen(p.x,p.y,c.clientWidth,c.clientHeight,bounds);
+    spawnBurst(s.x, s.y, state.cascade>=5 ? '#7c3aed' : (state.cascade>=3 ? '#ff4d1a' : '#22d3ee'), 18+state.cascade*4);
+    // sheet sprites absorbed from KHAOS lineage
+    try{
+      const img = state.cascade>=4 ? window._fxMeteor : window._fxFlow;
+      if(img && img.complete){
+        const ctx=$('map').getContext('2d');
+        const sw=Math.min(128,img.width/4), sh=Math.min(128,img.height/4);
+        ctx.globalAlpha=0.55; ctx.drawImage(img,0,0,sw,sh,s.x-40,s.y-40,80,80); ctx.globalAlpha=1;
+      }
+    }catch(e){}
+
+    for(let i=0;i<10;i++){
+      const ang=i/10*Math.PI*2;
+      particles.push({x:s.x,y:s.y,vx:Math.cos(ang)*2.2,vy:Math.sin(ang)*2.2,life:1,color:state.cascade>=5?'#a78bfa':'#fb923c'});
+    }
+  });
+  const wrap=$('mapWrap');
+  if(wrap){ wrap.classList.add('khaos-hit'); setTimeout(()=>wrap.classList.remove('khaos-hit'), 420); }
+  requestAnimationFrame(draw);
+}
+
+function runPhenomenon(){
+  sfx('phenom');
+  // cascade pressure: war + random climate
+  if(Math.random()<0.62) state.cascade=Math.min(5, state.cascade+1);
+  else if(state.cascade>0 && Math.random()<0.1) state.cascade--;
+
+  const level=Math.max(1, state.cascade||1);
+  const pool=W.phenomena||[{id:'x',name:'Caos',icon:'⚡'}];
+  const msgs={1:VIEJO.phenom1,2:VIEJO.phenom2,3:VIEJO.phenom3,4:VIEJO.phenom4,5:VIEJO.phenom5};
+  Viejo.speak('phenom'+level);
+  const casMsg={1:'1 fenómeno · ventaja o ruina',2:'2 · destrucción mayor',3:'3 · KHAOS absoluto',4:'4 · escala planetaria',5:'5 · grieta temporal'}[level];
+  if(casMsg) toast(casMsg, 2200);
+  const hitList=[];
+  flash(0.15+level*0.06); shake=4+level*2;
+  pulseAsh(level>=2);
+
+  const hits=level>=4? level+1 : level;
+  const dmgBase=level;
+  for(let i=0;i<hits;i++){
+    const ph=pool[rnd(0,pool.length-1)];
+    let t=state.territories[rnd(0,state.territories.length-1)];
+    // soft mercy: if LEGION is thin, prefer hitting others
+    if(t.owner==='LEGION' && ownedBy('LEGION').length<=6 && Math.random()<0.55){
+      const others=state.territories.filter(x=>x.owner!=='LEGION');
+      if(others.length) t=others[rnd(0,others.length-1)];
+    }
+    const dmg=Math.min(3, dmgBase + (i>2?1:0));
+    t.armies=Math.max(1, t.armies-dmg);
+    t.scar=Math.min(3,(t.scar||0)+1);
+    state.lastPhenom=ph.name||ph.id;
+    hitList.push(t);
+    log((ph.icon||'⚡')+' '+(ph.name||'Fenómeno')+' · '+t.name+' −'+dmg);
+    try{ Viejo.fact('phenom_hit', (ph.name||'Fenómeno')+' en '+t.name+' −'+dmg+' (cascada '+level+')'); }catch(e){}
+    const c=$('map'); const bounds=boundsOf();
+    const p=W.positions[String(t.id)]||{x:250,y:250};
+    const s=worldToScreen(p.x,p.y,c.clientWidth,c.clientHeight,bounds);
+    spawnBurst(s.x,s.y,'#ff4d1a', 10+level);
+  }
+
+  // level 5: temporal rift
+  khaosStrike(hitList);
+  try{ Viejo.fact('khaos_strike', 'Golpe KHAOS nivel '+level+' · objetivos '+hitList.length); }catch(e){}
+  if(level>=5){
+    pulseRift(true);
+    if(!state.rift){
+      state.rift=true;
+      Viejo.speak('rift');
+    // UNIFICADO: módulo KHAOS absorbido (mismo APK, no menú suelto)
+    try{ if(state.cascade>=5 && Math.random()<0.35) toast('Grieta: módulo KHAOS disponible · hold ARCHIVO', 2500); }catch(e){}
+      sfx('rift');
+      toast('GRIETA TEMPORAL · 03:33:33');
+      const inv=['ZOMBIE','MUTANT','SKENET','XENO','PRED'];
+      const n=2+rnd(0,1);
+      for(let i=0;i<n;i++){
+        const t=state.territories[rnd(0,state.territories.length-1)];
+        // don't wipe legion last stand if only few left
+        if(t.owner==='LEGION' && ownedBy('LEGION').length<=3 && Math.random()<0.5) continue;
+        const v=inv[rnd(0,inv.length-1)];
+        t.owner=v; t.armies=3+rnd(0,3); t.riftMark=true;
+        log('GRIETA: '+v+' invade '+t.name);
+      }
+      if(!state.enigmaSeen && W.enigma17){
+        state.enigmaSeen=true;
+        log('ENIGMA 17: '+(W.enigma17.memory||'…'));
+      }
+    } else {
+      // ongoing rift pressure
+      const invaders=state.territories.filter(t=>(W.factions[t.owner]||{}).invader || ['ZOMBIE','MUTANT','SKENET','XENO','PRED'].includes(t.owner));
+      invaders.forEach(t=>{ if(Math.random()<0.4) t.armies+=1; });
+      log('La grieta respira. Invasores se refuerzan.');
+    }
+  }
+
+  save(); draw(); updateHUD(); checkVictory();
+}
+
+function LEGION_AUTOPILOT_GUARD(){
+  /* Capa Legión: si no ve el control, no actúa */
+  try{
+    if(document.visibilityState!=='visible') return false;
+    const hud=document.querySelector('.dock, #hud, .bar, #ui') || document.body;
+    const r=hud.getBoundingClientRect();
+    if(r.width<8 || r.height<8) return false;
+    return true;
+  }catch(e){return true}
+}
+function aiTurn(fid){
+  if(!LEGION_AUTOPILOT_GUARD()){ try{log("Legión: sin control visible → no actúa")}catch(e){} return; }
+
+  if(!ownedBy(fid).length) return;
+  const prev=state.current;
+  state.current=fid; // CRITICAL: attack() gates on state.current
+  // reinforce
+  let inc=incomeOf(fid);
+  let mine=ownedBy(fid);
+  while(inc>0 && mine.length){
+    const t=mine[rnd(0,mine.length-1)]; t.armies++; inc--;
+  }
+  // attacks 1-3
+  const tries=rnd(0,2); // 69.0.1 less berserk AI
+  for(let k=0;k<tries;k++){
+    const froms=ownedBy(fid).filter(t=>t.armies>=2);
+    if(!froms.length) break;
+    const from=froms[rnd(0,froms.length-1)];
+    const enemyIds=neighbors(from.id).filter(id=>{const tt=terrById(id); return tt&&tt.owner!==fid});
+    if(!enemyIds.length) continue;
+    enemyIds.sort((a,b)=>(terrById(a).armies||0)-(terrById(b).armies||0));
+    const to=terrById(enemyIds[0]);
+    if(to) attack(from,to);
+  }
+  // light fortify
+  const strong=ownedBy(fid).filter(t=>t.armies>=4);
+  if(strong.length){
+    const from=strong[rnd(0,strong.length-1)];
+    const ally=neighbors(from.id).map(terrById).filter(t=>t&&t.owner===fid);
+    if(ally.length && from.armies>=2){ from.armies--; ally[0].armies++; }
+  }
+  state.current=prev;
+}
+
+function endPhase(){
+  try{
+    if(window.VCGlobal && state.current==='LEGION' && state.phase==='REINFORCE'){
+      const n=VCGlobal.troopBank();
+      if(n>0){ /* show only */ }
+    }
+  }catch(e){}
+
+  if(state.current!=='LEGION'||state.over) return;
+  if(state.phase==='REINFORCE'){
+    if(placeLeft>0){ toast('Coloca tus '+placeLeft+' refuerzos'); return; }
+    state.phase='ATTACK'; state._bankApplied=false;; sel=null; sel2=null; Viejo.speak('attack');
+  } else if(state.phase==='ATTACK'){
+    state.phase='FORTIFY'; sel=null; sel2=null; Viejo.speak('fortify');
+  } else if(state.phase==='FORTIFY'){
+    state.phase='PHENOM'; sel=null; sel2=null; say('El clima mira el tablero…');
+  } else if(state.phase==='PHENOM'){
+    runPhenomenon();
+    // next turn: AI then back to legion
+    advanceTurn();
+    return;
+  }
+  updateHUD(); draw(); save();
+}
+
+function advanceTurn(){
+  const order=['LEGION','VOID','KHAOS','CROWN','FENIX','NEXUS'];
+  // invaders act lightly if rift
+  if(state.rift){
+    ['ZOMBIE','MUTANT','SKENET','XENO','PRED'].forEach(fid=>{
+      if(ownedBy(fid).length) aiTurn(fid);
+    });
+  }
+  // other playable AIs
+  order.filter(f=>f!=='LEGION').forEach(fid=>{
+    if(ownedBy(fid).length) aiTurn(fid);
+  });
+  if(checkVictory()) return;
+  state.turn++;
+  state.current='LEGION';
+  state.phase='REINFORCE'; state._bankApplied=false;
+  placeLeft=incomeOf('LEGION');
+  state.placeLeft=placeLeft;
+  sel=null; sel2=null;
+  Viejo.speak('reinforce');
+  log('— Turno '+state.turn+' —');
+  Viejo.maybeVignette();
+  updateHUD(); draw(); save();
+}
+
+function primary(){
+  if(state.current!=='LEGION'||state.over) return;
+  if(state.phase==='REINFORCE'){
+    if(!sel||sel.owner!=='LEGION'){ toast('Elige territorio tuyo'); return; }
+    if(placeLeft<=0){ toast('Sin refuerzos'); return; }
+    sel.armies++; placeLeft--; state.placeLeft=placeLeft; sfx('place');
+    if(placeLeft<=0){ state.phase='ATTACK'; sel=null; Viejo.speak('attack'); }
+    updateHUD(); draw(); save(); return;
+  }
+  if(state.phase==='ATTACK'){
+    if(!sel||!sel2){ toast('Elige origen y destino'); return; }
+    attack(sel, sel2);
+    if(sel&&sel.armies<2){ sel=null; sel2=null; }
+    else sel2=null;
+    updateHUD(); draw(); return;
+  }
+  if(state.phase==='FORTIFY'){
+    if(!sel||!sel2){ toast('Elige origen y destino'); return; }
+    fortify(sel, sel2);
+    sel=null; sel2=null; updateHUD(); draw(); return;
+  }
+  if(state.phase==='PHENOM'){
+    runPhenomenon();
+    advanceTurn();
+  }
+}
+
+function secondary(){
+  if(state.current!=='LEGION'||state.over) return;
+  if(state.phase==='REINFORCE'){
+    // auto place
+    while(placeLeft>0){
+      const mine=ownedBy('LEGION'); if(!mine.length) break;
+      // prefer border
+      let t=mine[rnd(0,mine.length-1)];
+      const border=mine.filter(x=>neighbors(x.id).some(id=>{const tt=terrById(id);return tt&&tt.owner!=='LEGION'}));
+      if(border.length) t=border[rnd(0,border.length-1)];
+      t.armies++; placeLeft--;
+    }
+    state.placeLeft=0; state.phase='ATTACK'; sel=null; sel2=null;
+    Viejo.speak('attack'); updateHUD(); draw(); save(); return;
+  }
+  if(state.phase==='ATTACK'||state.phase==='FORTIFY'){
+    sel=null; sel2=null; updateHUD(); draw();
+  }
+}
+
+/* —— boot cinematic —— */
+const BOOT_LINES = [
+  (W_day)=> W_day || 'El día que la naturaleza dejó de obedecer — no el día que empezó la guerra.',
+  'Seis facciones. Cuarenta y dos nodos. Un clima que elige herida.',
+  'Uno: ventaja o ruina. Dos: destrucción mayor. Tres: KHAOS.',
+  'Cuatro: escala planetaria. Cinco: grieta temporal… y lo que no es de este mundo.',
+  'El Viejo vio la Grieta-17. Aún pregunta si Mando Flacko sigue vivo.'
+];
+
+function startBootCine(){
+  const boot=$('boot');
+  const frames=['cine/seq_000.jpg','cine/seq_001.jpg','cine/seq_002.jpg','cine/seq_005.jpg','tex/cine_apocalypse.png','tex/boot_vertical.png'];
+  let i=0;
+  function apply(){
+    boot.style.backgroundImage='url('+frames[i%frames.length]+')';
+    const line=BOOT_LINES[Math.min(i, BOOT_LINES.length-1)];
+    const text=typeof line==='function'? line(W&&W.day_zero): line;
+    $('bootStory').textContent=text;
+    i++;
+  }
+  apply();
+  bootTimer=setInterval(apply, 2200);
+  // continue button if save
+  if(localStorage.getItem(SAVE)){
+    try{
+      const s=JSON.parse(localStorage.getItem(SAVE));
+      if(s&&!s.over) $('btnContinue').style.display='block';
+    }catch(e){}
+  }
+}
+
+async function enterGame(resume){
+  ensureAudio(); beep(110,.05,'sine',.03);
+  if(bootTimer) clearInterval(bootTimer);
+  if(!W) W=await fetch('world.json').then(r=>r.json());
+  await VIEJO_ARCHIVO.load(); Viejo.archivo=VIEJO_ARCHIVO.loaded; Viejo.loadExp(); log(Viejo.dumpCanonNote());
+  buildLegend();
+  if(resume){
+    if(!loadSave()) initState();
+  } else {
+    localStorage.removeItem(SAVE);
+    initState();
+  }
+  $('boot').classList.add('gone');
+  $('app').classList.add('on');
+  setupMap();
+  updateHUD();
+  draw();
+  Viejo.speak('start');
+  log(W.first_direction || 'Día Zero.');
+  log('Mapa: '+(W.name||'VOIDCROWN')+' · '+state.territories.length+' territorios');
+  flash(0.2);
+  window.addEventListener('resize', ()=>draw());
+}
+
+$('btnPlay').onclick=()=>enterGame(false);
+$('btnContinue').onclick=()=>enterGame(true);
+$('btnPrimary').onclick=primary;
+$('btnSecondary').onclick=secondary;
+$('btnEnd').onclick=endPhase;
+$('btnAgain').onclick=()=>{
+  $('end').classList.remove('on');
+  localStorage.removeItem(SAVE);
+  initState(); placeLeft=state.placeLeft; sel=null; sel2=null;
+  updateHUD(); draw(); Viejo.speak('start');
+};
+$('btnKhaos').onclick=()=>{
+  let ov=$('khaosOv'); if(!ov){
+    ov=document.createElement('div'); ov.id='khaosOv';
+    ov.style.cssText='position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column';
+    ov.innerHTML='<div style="padding:8px;background:#111;color:#f97316;font:12px monospace;display:flex;justify-content:space-between"><span>KHAOS MODULE · absorbido</span><button id="khaosClose" style="background:#f97316;color:#000;border:0;padding:4px 10px">CERRAR</button></div><iframe src="modules/khaos_legacy.html" style="flex:1;border:0;width:100%"></iframe>';
+    document.body.appendChild(ov);
+    ov.querySelector('#khaosClose').onclick=()=>ov.remove();
+  }
+};
+$('btnArchivo').onclick=()=>{
+  const hechos=(Viejo.hechos||[]).slice(-4).map(e=>'HECHO t'+(e.t||0)+': '+(e.text||e.kind)).join('
+');
+  const recs=(Viejo.logExp||[]).filter(e=>(e.clase||'RECUERDO')!=='HECHO').slice(-4).map(e=>'RECUERDO t'+(e.t||0)+' ['+(e.state||'')+']: '+(e.text||'')).join('
+');
+  const pend=(Viejo.archivo&&Viejo.archivo.pendiente)?('PENDIENTE:
+- '+Viejo.archivo.pendiente.slice(0,3).join('
+- ')):'PENDIENTE: ver ARCHIVO_VIVO.json';
+  alert('ARCHIVO VIVO · HECHO ≠ RECUERDO ≠ PENDIENTE
+
+'+(hechos||'(sin hechos)')+'
+
+'+(recs||'(sin recuerdos)')+'
+
+'+pend);
+};
+$('btnFlacko').onclick=()=>Viejo.onPlayerMentionFlacko();
+$('btnMute').onclick=()=>{
+  muted=!muted;
+  $('btnMute').textContent=muted?'MUTE':'SONIDO';
+  if(!muted) ensureAudio();
+};
+
+// preload world for boot text
+fetch('world.json').then(r=>r.json()).then(j=>{ W=j; startBootCine(); }).catch(()=>startBootCine());
+})();
+</script>
+<script>
+try{ if(window.VCMeta){ var s=VCMeta.load(); var el=document.getElementById('cmdTitle'); if(el) el.textContent=s.title; VCMeta.ensureMissions(); } }catch(e){}
+</script>
+
+<script>
+// OMEGA 26 absorb: voz del Viejo en boot (best audio)
+(function(){
+  try{
+    const tracks=['cine/viejo/01-santa.mp3','cine/viejo/07-primera.mp3','cine/viejo/08-turno.mp3'];
+    const a=new Audio(tracks[Math.floor(Math.random()*tracks.length)]);
+    a.volume=0.45;
+    const once=()=>{a.play().catch(()=>{}); window.removeEventListener('pointerdown',once);};
+    window.addEventListener('pointerdown',once,{once:true});
+  }catch(e){}
+})();
+</script>
+
+</body>
+</html>
