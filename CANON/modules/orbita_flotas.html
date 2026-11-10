@@ -4,193 +4,218 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
 <meta name="theme-color" content="#03060e"/>
-<title>ÓRBITA · Flotas tácticas · VOIDCROWN</title>
+<title>ÓRBITA · Motor de flotas · VOIDCROWN</title>
 <style>
 :root{
-  --bg:#03060e; --panel:rgba(10,16,28,.92); --line:rgba(94,242,208,.22);
-  --cyan:#5ef2d0; --red:#ff4d3a; --gold:#ffc857; --violet:#b18cff; --muted:#8b93a8; --fg:#e8eefc;
+  --bg:#03060e; --panel:rgba(10,16,28,.94); --line:rgba(255,200,87,.28);
+  --cyan:#5ef2d0; --gold:#ffc857; --violet:#b18cff; --red:#ff4d3a; --muted:#8b93a8; --fg:#e8eefc;
   --safe:env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,sans-serif;overflow:hidden}
-#map{position:fixed;inset:0;touch-action:none;cursor:crosshair}
+#map{position:fixed;inset:0;touch-action:none}
 .top{position:fixed;top:0;left:0;right:0;z-index:5;padding:10px 12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;
-  background:linear-gradient(180deg,rgba(0,0,0,.85),transparent);pointer-events:none}
+  background:linear-gradient(180deg,rgba(0,0,0,.88),transparent);pointer-events:none}
 .top *{pointer-events:auto}
-.brand{font-size:11px;letter-spacing:.22em;color:var(--cyan);font-weight:700}
-.pill{font-size:11px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.45);color:var(--muted)}
+.brand{font-size:11px;letter-spacing:.2em;color:var(--gold);font-weight:800}
+.pill{font-size:11px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.5);color:var(--muted)}
 .pill b{color:var(--gold)}
-.side{position:fixed;top:52px;right:8px;width:min(300px,92vw);z-index:6;display:flex;flex-direction:column;gap:8px;max-height:calc(100% - 140px);overflow:auto}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;backdrop-filter:blur(8px)}
-.card h2{font-size:11px;letter-spacing:.16em;color:var(--cyan);margin-bottom:8px}
-.card h3{font-size:12px;color:var(--gold);margin:6px 0}
+.side{position:fixed;top:52px;right:8px;width:min(320px,94vw);z-index:6;display:flex;flex-direction:column;gap:8px;max-height:calc(100% - 150px);overflow:auto}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px}
+.card h2{font-size:10px;letter-spacing:.16em;color:var(--gold);margin-bottom:8px}
+.card h3{font-size:13px;margin:4px 0 6px}
 .muted{color:var(--muted);font-size:11px;line-height:1.4}
 .row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-button,select,input{font:inherit;color:var(--fg);background:#121a28;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:8px 10px;min-height:40px}
-button{cursor:pointer;font-weight:700;font-size:11px}
-button.primary{background:linear-gradient(180deg,#2a9f7a,#145a46);border-color:rgba(94,242,208,.4)}
-button.hot{background:linear-gradient(180deg,#8a2a22,#4a1210);border-color:rgba(255,77,58,.45)}
+label{font-size:10px;color:var(--muted);display:block;margin-top:6px}
+input,select,button{font:inherit;color:var(--fg);background:#121a28;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:8px 10px;min-height:40px;width:100%}
+button{cursor:pointer;font-weight:700;font-size:11px;width:auto}
+button.primary{background:linear-gradient(180deg,#c9a227,#7a5a10);border-color:rgba(255,200,87,.45);color:#1a1200}
+button.hot{background:linear-gradient(180deg,#8a2a22,#4a1210);border-color:rgba(255,77,58,.4)}
 button.ghost{background:transparent}
 button:disabled{opacity:.4;cursor:not-allowed}
-button:active:not(:disabled){transform:scale(.97)}
-.fleet{display:flex;justify-content:space-between;gap:6px;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.06);margin-top:6px;cursor:pointer}
-.fleet.on{border-color:var(--cyan);background:rgba(94,242,208,.08)}
+.fleet{padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.06);margin-top:6px;cursor:pointer}
+.fleet.on{border-color:var(--gold);background:rgba(255,200,87,.08)}
 .fleet .name{font-size:12px;font-weight:700}
 .fleet .meta{font-size:10px;color:var(--muted)}
 .bar{height:6px;background:#0a1018;border-radius:99px;overflow:hidden;margin-top:4px}
-.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--gold));width:0%;transition:width .25s linear}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#fff2c0);width:0%}
 .dock{position:fixed;left:0;right:0;bottom:0;z-index:7;padding:10px 10px calc(10px + var(--safe));
   background:linear-gradient(0deg,rgba(0,0,0,.92),transparent);display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-.toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%);z-index:9;background:rgba(10,14,24,.95);border:1px solid var(--line);
-  padding:10px 14px;border-radius:12px;font-size:12px;max-width:90vw;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:9;background:rgba(10,14,24,.95);border:1px solid var(--line);
+  padding:10px 14px;border-radius:12px;font-size:12px;max-width:92vw;opacity:0;pointer-events:none;transition:opacity .2s}
 .toast.show{opacity:1}
-.logbox{max-height:140px;overflow:auto;font-size:10px;color:var(--muted);line-height:1.35}
+.logbox{max-height:120px;overflow:auto;font-size:10px;color:var(--muted)}
 .logbox div{border-bottom:1px solid rgba(255,255,255,.04);padding:3px 0}
-.modal{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;padding:16px}
+.modal{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;padding:16px}
 .modal.on{display:flex}
-.modal .box{width:min(520px,100%);max-height:85vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
-table{width:100%;border-collapse:collapse;font-size:11px}
-th,td{text-align:left;padding:6px 4px;border-bottom:1px solid rgba(255,255,255,.06)}
-th{color:var(--cyan);font-weight:600}
-.legend{position:fixed;left:10px;bottom:90px;z-index:5;font-size:10px;color:var(--muted);background:rgba(0,0,0,.5);padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.06)}
-a.back{color:var(--cyan);text-decoration:none;font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.4)}
+.modal .box{width:min(560px,100%);max-height:85vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
+.camp{border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px;margin-top:8px}
+.camp summary{cursor:pointer;color:var(--gold);font-weight:700;font-size:12px}
+.turn{font-size:10px;color:var(--muted);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+a.back{color:var(--cyan);text-decoration:none;font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid rgba(94,242,208,.25);background:rgba(0,0,0,.4)}
+.legend{position:fixed;left:10px;bottom:92px;z-index:5;font-size:10px;color:var(--muted);background:rgba(0,0,0,.55);padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.06);max-width:46vw}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 </style>
 </head>
 <body>
 <canvas id="map"></canvas>
 <div class="top">
   <a class="back" href="../index.html">← RISK</a>
-  <span class="brand">ÓRBITA · FLOTAS</span>
-  <span class="pill">t+ <b id="simTime">0.0</b>h</span>
+  <span class="brand">ÓRBITA · MOTOR FLOTAS</span>
+  <span class="pill">turno <b id="turn">1</b></span>
+  <span class="pill">t+ <b id="simTime">0.0</b>s</span>
   <span class="pill">créditos <b id="credits">0</b></span>
-  <span class="pill">campaña <b id="campaignName">—</b></span>
+  <span class="pill">fuel pool <b id="fuelPool">0</b></span>
 </div>
 <div class="side">
   <div class="card">
-    <h2>CUERPO SELECCIONADO</h2>
-    <h3 id="bodyName">Toca un planeta</h3>
-    <p class="muted" id="bodyMeta">Distancia, órbita y flotas ancladas.</p>
+    <h2>DESPACHO</h2>
+    <div class="grid2">
+      <div>
+        <label>Origen</label>
+        <select id="selOrigin"></select>
+      </div>
+      <div>
+        <label>Destino</label>
+        <select id="selDest"></select>
+      </div>
+    </div>
+    <label>Naves a enviar</label>
+    <input id="inpShips" type="number" min="1" value="5"/>
+    <p class="muted" id="routeCalc" style="margin-top:8px">Elige origen y destino.</p>
     <div class="row">
-      <button type="button" id="btnAnchor" disabled>Anclar destino</button>
-      <button type="button" id="btnCenter" class="ghost">Centrar</button>
+      <button type="button" class="primary" id="btnLaunch">Desplegar flota</button>
+      <button type="button" class="hot" id="btnAbort">Abortar sel.</button>
     </div>
   </div>
   <div class="card">
-    <h2>FLOTAS</h2>
+    <h2>MUNDOS / CONTROL</h2>
+    <div id="worldList" class="muted"></div>
+  </div>
+  <div class="card">
+    <h2>FLOTAS EN VUELO / BASE</h2>
     <div id="fleetList"></div>
+  </div>
+  <div class="card">
+    <h2>COMBUSTIBLE</h2>
+    <p class="muted">Recupera <b>+4</b> por turno · o compra 10 comb = 15 créditos</p>
     <div class="row">
-      <button type="button" class="primary" id="btnLaunch" disabled>Desplegar ruta</button>
-      <button type="button" class="hot" id="btnAbort" disabled>Abortar</button>
+      <button type="button" id="btnBuyFuel">Comprar fuel</button>
+      <button type="button" id="btnEndTurn">Fin de turno</button>
     </div>
-    <p class="muted" id="routePreview">Elige flota + destino. Tiempo y combustible se calculan por distancia AU.</p>
   </div>
   <div class="card">
-    <h2>TELEMETRÍA EN VUELO</h2>
-    <div id="inflight" class="muted">Ninguna flota en tránsito.</div>
-  </div>
-  <div class="card">
-    <h2>LOG DE PARTIDA</h2>
+    <h2>BITÁCORA EN VIVO</h2>
     <div class="logbox" id="liveLog"></div>
   </div>
 </div>
 <div class="legend">
-  ● planeta &nbsp; ◈ flota &nbsp; — ruta activa<br/>
-  arrastra = pan · rueda = zoom · toca = seleccionar
+  Arco dorado = flota en tránsito (% avance)<br/>
+  Línea punteada = ruta · ◈ = nave<br/>
+  Llegada: refuerzo (tuyo) / asalto (hostil)
 </div>
 <div class="dock">
-  <button type="button" id="btnPause">⏸ Pausa</button>
+  <button type="button" id="btnPause">⏸</button>
   <button type="button" id="btnSpeed">×1</button>
-  <button type="button" id="btnNewCamp" class="primary">Nueva campaña</button>
-  <button type="button" id="btnHistory">Histórico</button>
-  <button type="button" id="btnExport">Export CSV</button>
-  <button type="button" id="btnSmash" class="ghost" onclick="location.href='void_smash.html'">SMASH</button>
+  <button type="button" class="primary" id="btnArchive">Cerrar campaña → Archivo</button>
+  <button type="button" id="btnHistory">Archivo</button>
+  <button type="button" id="btnExport">CSV</button>
+  <button type="button" class="ghost" onclick="location.href='void_smash.html'">SMASH</button>
 </div>
 <div class="toast" id="toast"></div>
 <div class="modal" id="histModal">
   <div class="box">
-    <h2 style="letter-spacing:.16em;color:var(--cyan);font-size:12px;margin-bottom:10px">HISTÓRICO DE CAMPAÑAS</h2>
-    <p class="muted" style="margin-bottom:10px">Logs guardados en este dispositivo (localStorage). Revisa rendimiento de comandantes.</p>
+    <h2 style="color:var(--gold);letter-spacing:.14em;font-size:12px;margin-bottom:8px">ARCHIVO · HISTÓRICO DE CAMPAÑAS</h2>
+    <p class="muted" style="margin-bottom:10px">Despliega cualquier partida y lee turno a turno: mundos, flotas y puntaje.</p>
     <div id="histBody"></div>
     <div class="row" style="margin-top:12px">
       <button type="button" id="btnCloseHist">Cerrar</button>
-      <button type="button" class="hot" id="btnClearHist">Borrar histórico</button>
+      <button type="button" class="hot" id="btnClearHist">Vaciar archivo</button>
     </div>
   </div>
 </div>
 <script>
 (function(){
 'use strict';
-const KEY_STATE='vc-orbit-fleet-v1';
-const KEY_HIST='vc-orbit-campaigns-v1';
-const AU_PX=90; // pixels per AU at zoom 1
-const FUEL_PER_AU=12; // units
-const HOURS_PER_AU=4.5; // base travel hours
+/** Motor verificado: distancia orbital → tiempo + combustible; llegadas refuerzo/asalto; histórico por campaña */
+const KEY_S='vc-orbit-motor-v2';
+const KEY_H='vc-orbit-archivo-v2';
 const SPEEDS=[1,2,4,8];
+// escala: 1 unidad de distancia del motor ≈ distancia euclídea en AU*scale
+// calibres de referencia (como tu motor):
+// Tierra→Marte ≈ 9.5 u, ~4s, 6 comb
+// Tierra→Planeta X ≈ 125.8 u, ~48s, 70 comb
+const REF = { distPerAU: 9.5, hoursPerUnit: 4/9.5, fuelPerUnit: 6/9.5 }; // ≈0.421 s/u real-sim, fuel≈0.632/u
 
-// --- star system (simplified inner + mid system) ---
-const BODIES=[
-  {id:'sol',name:'SOL',kind:'star',x:0,y:0,r:18,color:'#ffc857',fuelBonus:0},
-  {id:'mer',name:'Mercurio',kind:'planet',orbit:0.39,phase:0.2,r:5,color:'#c4a882'},
-  {id:'ven',name:'Venus',kind:'planet',orbit:0.72,phase:1.1,r:7,color:'#e8c89a'},
-  {id:'ter',name:'Tierra',kind:'planet',orbit:1.0,phase:2.4,r:8,color:'#5ef2d0'},
-  {id:'lun',name:'Luna',kind:'moon',parent:'ter',orbit:0.12,phase:0.5,r:3,color:'#b8c0d0'},
-  {id:'mar',name:'Marte',kind:'planet',orbit:1.52,phase:3.6,r:6,color:'#ff6b4a'},
-  {id:'cer',name:'Ceres',kind:'dwarf',orbit:2.77,phase:0.8,r:4,color:'#9aa3b8'},
-  {id:'jup',name:'Júpiter',kind:'planet',orbit:5.2,phase:4.2,r:14,color:'#d4a574'},
-  {id:'sat',name:'Saturno',kind:'planet',orbit:9.5,phase:5.5,r:12,color:'#e6d3a3'},
-  {id:'ast',name:'Cinturón',kind:'belt',orbit:2.2,phase:0,r:0,color:'#445'},
+const WORLDS=[
+  {id:'sol', name:'Sol', kind:'star', orbit:0, phase:0, owner:null, r:16, color:'#ffc857'},
+  {id:'mer', name:'Mercurio', kind:'rock', orbit:0.39, phase:0.3, owner:null, r:5, color:'#c4a882'},
+  {id:'ven', name:'Venus', kind:'rock', orbit:0.72, phase:1.2, owner:null, r:6, color:'#e8c89a'},
+  {id:'ter', name:'Tierra', kind:'home', orbit:1.0, phase:2.1, owner:'player', r:8, color:'#5ef2d0', garrison:20},
+  {id:'mar', name:'Marte', kind:'rock', orbit:1.52, phase:3.4, owner:'enemy', r:6, color:'#ff6b4a', garrison:10},
+  {id:'cer', name:'Ceres', kind:'dwarf', orbit:2.77, phase:0.9, owner:null, r:4, color:'#9aa3b8', garrison:0},
+  {id:'jup', name:'Júpiter', kind:'gas', orbit:5.2, phase:4.5, owner:'enemy', r:13, color:'#d4a574', garrison:18},
+  {id:'sat', name:'Saturno', kind:'gas', orbit:9.5, phase:5.6, owner:null, r:11, color:'#e6d3a3', garrison:6},
+  {id:'plx', name:'Planeta X', kind:'dark', orbit:13.2, phase:1.7, owner:'enemy', r:9, color:'#7b5cff', garrison:25},
 ];
 
-function bodyPos(b, tHours){
-  if(b.kind==='star') return {x:0,y:0};
-  if(b.kind==='belt') return {x:0,y:0};
-  const ang=b.phase + tHours*0.02/Math.sqrt(Math.max(b.orbit,0.1));
-  if(b.parent){
-    const p=BODIES.find(x=>x.id===b.parent);
-    const pp=bodyPos(p,tHours);
-    return {x:pp.x+Math.cos(ang)*b.orbit*AU_PX, y:pp.y+Math.sin(ang)*b.orbit*AU_PX};
-  }
-  return {x:Math.cos(ang)*b.orbit*AU_PX, y:Math.sin(ang)*b.orbit*AU_PX};
+const AU_PX=70;
+
+function load(k,fb){try{return JSON.parse(localStorage.getItem(k)||'null')||fb}catch(e){return fb}}
+function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+
+function pos(w, tSec){
+  if(w.orbit<=0) return {x:0,y:0};
+  const ang=w.phase + tSec*0.015/Math.sqrt(w.orbit);
+  return {x:Math.cos(ang)*w.orbit*AU_PX, y:Math.sin(ang)*w.orbit*AU_PX};
 }
 
-function distAU(a,b,t){
-  const pa=bodyPos(a,t), pb=bodyPos(b,t);
-  const dx=pa.x-pb.x, dy=pa.y-pb.y;
-  return Math.sqrt(dx*dx+dy*dy)/AU_PX;
+function distUnits(a,b,tSec){
+  const pa=pos(a,tSec), pb=pos(b,tSec);
+  const d=Math.hypot(pa.x-pb.x, pa.y-pb.y)/AU_PX; // AU
+  // map AU chord to "orbital units" calibrated so 1AU-ish near Mars transfer ~9.5u
+  // Earth-Mars avg ~0.52 AU chord varying; we use instantaneous * scale
+  return d * (9.5/0.52);
 }
 
-function loadJSON(k, fb){try{return JSON.parse(localStorage.getItem(k)||'null')||fb}catch(e){return fb}}
-function saveJSON(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function travelStats(fromId,toId,tSec){
+  const a=WORLDS.find(w=>w.id===fromId), b=WORLDS.find(w=>w.id===toId);
+  if(!a||!b||a.id===b.id) return null;
+  const u=distUnits(a,b,tSec);
+  const sec=Math.max(0.8, u * REF.hoursPerUnit); // "hours" en motor real = segundos de sim leíbles
+  const fuel=Math.max(1, Math.round(u * REF.fuelPerUnit));
+  return {units:+u.toFixed(1), sec:+sec.toFixed(1), fuel, from:fromId, to:toId};
+}
 
-function newCampaign(){
-  const id='C'+Date.now().toString(36).toUpperCase();
+function newState(){
   return {
-    id, name:'Campaña '+id.slice(-4),
-    t:0, // sim hours
-    credits:500,
+    id:'C'+Date.now().toString(36).toUpperCase(),
+    name:'Campaña '+new Date().toLocaleString(),
+    turn:1,
+    t:0, // sim seconds
+    credits:400,
+    fuelPool:40,
     paused:false,
     speedIdx:0,
-    selectedBody:null,
     selectedFleet:null,
-    destBody:null,
-    fleets:[
-      {id:'f1',name:'Vanguardia α',home:'ter',at:'ter',fuel:100,fuelMax:100,ships:12,status:'docked',route:null,xp:0,missions:0},
-      {id:'f2',name:'Lanza β',home:'mar',at:'mar',fuel:80,fuelMax:100,ships:8,status:'docked',route:null,xp:0,missions:0},
-      {id:'f3',name:'Sombra γ',home:'jup',at:'jup',fuel:120,fuelMax:140,ships:20,status:'docked',route:null,xp:0,missions:0},
-    ],
-    logs:[],
-    stats:{distanceAU:0, fuelBurned:0, trips:0, aborted:0}
+    worlds: WORLDS.map(w=>({id:w.id, owner:w.owner, garrison:w.garrison||0})),
+    fleets:[], // in transit
+    bases:{ // parked ships per world for player
+      ter:24, mar:0, jup:0, sat:0, cer:0, ven:0, mer:0, plx:0, sol:0
+    },
+    logs:[], // {turn,t,msg,kind}
+    turnLog:[], // per-turn summaries for archive
+    score:0,
+    closed:false
   };
 }
 
-let state=loadJSON(KEY_STATE, null);
-if(!state||!state.fleets) state=newCampaign();
+let S=load(KEY_S,null);
+if(!S||!S.bases) S=newState();
 
 const canvas=document.getElementById('map');
 const ctx=canvas.getContext('2d');
-let W=0,H=0,dpr=1;
-let cam={x:0,y:0,z:1};
-let drag=null;
+let W=0,H=0,dpr=1, cam={x:0,y:0,z:0.85}, drag=null;
 
 function resize(){
   dpr=Math.min(devicePixelRatio||1,2);
@@ -201,402 +226,358 @@ function resize(){
 }
 addEventListener('resize',resize); resize();
 
-function toast(msg){
-  const el=document.getElementById('toast');
-  el.textContent=msg; el.classList.add('show');
-  clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove('show'),2200);
+function toast(m){const el=document.getElementById('toast');el.textContent=m;el.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.remove('show'),2400)}
+function log(msg,kind){
+  const e={turn:S.turn,t:S.t,msg,kind:kind||'info',at:new Date().toISOString()};
+  S.logs.unshift(e); S.logs=S.logs.slice(0,300);
+  S.turnLog.push(e);
+  persist(); renderLog();
 }
-function log(msg, kind){
-  const e={t:state.t, at:new Date().toISOString(), msg, kind:kind||'info'};
-  state.logs.unshift(e); state.logs=state.logs.slice(0,200);
-  save(); renderLog();
+function persist(){save(KEY_S,S)}
+
+function worldState(id){return S.worlds.find(w=>w.id===id)}
+function meta(id){return WORLDS.find(w=>w.id===id)}
+
+function w2s(x,y){return {x:W/2+(x-cam.x)*cam.z, y:H/2+(y-cam.y)*cam.z}}
+
+function fleetPos(f){
+  const a=meta(f.from), b=meta(f.to);
+  const pa=pos(a,S.t), pb=pos(b,S.t);
+  const p=Math.min(1,Math.max(0,f.progress));
+  return {x:pa.x+(pb.x-pa.x)*p, y:pa.y+(pb.y-pa.y)*p};
 }
 
-function save(){saveJSON(KEY_STATE, state)}
-
-function worldToScreen(x,y){
-  return {x: W/2 + (x-cam.x)*cam.z, y: H/2 + (y-cam.y)*cam.z};
-}
-function screenToWorld(sx,sy){
-  return {x: cam.x + (sx-W/2)/cam.z, y: cam.y + (sy-H/2)/cam.z};
-}
-
-function fleetWorldPos(f){
-  if(f.status==='transit' && f.route){
-    const a=BODIES.find(b=>b.id===f.route.from);
-    const b=BODIES.find(b=>b.id===f.route.to);
-    const pa=bodyPos(a,state.t), pb=bodyPos(b,state.t);
-    // progress along chord at launch snapshot? use live endpoints for "realtime routes"
-    const p=Math.min(1, Math.max(0, f.route.progress));
-    return {x:pa.x+(pb.x-pa.x)*p, y:pa.y+(pb.y-pa.y)*p};
-  }
-  const body=BODIES.find(b=>b.id===f.at)||BODIES[0];
-  return bodyPos(body, state.t);
+function fillSelects(){
+  const o=document.getElementById('selOrigin');
+  const d=document.getElementById('selDest');
+  const opts=WORLDS.filter(w=>w.kind!=='star').map(w=>{
+    const st=worldState(w.id);
+    const ships=S.bases[w.id]||0;
+    const tag=st.owner==='player'?'★':(st.owner==='enemy'?'✕':'·');
+    return `<option value="${w.id}">${tag} ${w.name} (${ships} naves)</option>`;
+  }).join('');
+  o.innerHTML=opts; d.innerHTML=opts;
+  o.value='ter'; d.value='mar';
 }
 
-function calcRoute(fromId,toId,fleet){
-  const a=BODIES.find(b=>b.id===fromId), b=BODIES.find(b=>b.id===toId);
-  if(!a||!b||a.id===b.id) return null;
-  const d=distAU(a,b,state.t);
-  const hours=Math.max(0.35, d*HOURS_PER_AU * (1 + (fleet.ships>15?0.15:0)));
-  const fuel=Math.ceil(d*FUEL_PER_AU * (1 + fleet.ships*0.01));
-  return {from:fromId,to:toId,distAU:+d.toFixed(3),hours:+hours.toFixed(2),fuel,progress:0,startedAt:state.t, eta:state.t+hours};
+function updateRouteCalc(){
+  const from=document.getElementById('selOrigin').value;
+  const to=document.getElementById('selDest').value;
+  const ships=Math.max(1,+document.getElementById('inpShips').value||1);
+  const st=travelStats(from,to,S.t);
+  const el=document.getElementById('routeCalc');
+  if(!st){el.textContent='Ruta inválida';return}
+  const fuelExtra=Math.ceil(ships*0.15);
+  const fuel=st.fuel+fuelExtra;
+  const avail=S.bases[from]||0;
+  el.innerHTML=`Distancia orbital <b>${st.units} u</b> · viaje <b>~${st.sec} s</b> · comb <b>${fuel}</b><br/>
+  Naves en origen: ${avail} · pool fuel: ${S.fuelPool}<br/>
+  <span style="color:#9aa3b8">Ref: Tierra→Marte ~9.5u/4s/6comb · Tierra→X ~125u/48s/70comb</span>`;
+  el.dataset.fuel=fuel; el.dataset.sec=st.sec; el.dataset.units=st.units;
 }
 
-function launchSelected(){
-  const f=state.fleets.find(x=>x.id===state.selectedFleet);
-  if(!f||!state.destBody||f.status==='transit') return;
-  if(f.at===state.destBody){toast('Ya está en destino');return}
-  const route=calcRoute(f.at, state.destBody, f);
-  if(!route) return;
-  if(f.fuel<route.fuel){toast('Combustible insuficiente ('+route.fuel+' u)');log('Fallo despacho '+f.name+': fuel','warn');return}
-  f.fuel-=route.fuel;
-  f.status='transit';
-  f.route=route;
-  state.stats.fuelBurned+=route.fuel;
-  state.stats.trips++;
-  state.credits=Math.max(0,state.credits); // no change
-  log(`${f.name} despega ${route.from} → ${route.to} · ${route.distAU} AU · ${route.hours}h · −${route.fuel} fuel`,'fleet');
+function launch(){
+  const from=document.getElementById('selOrigin').value;
+  const to=document.getElementById('selDest').value;
+  let ships=Math.max(1, Math.floor(+document.getElementById('inpShips').value||1));
+  if(from===to){toast('Origen = destino');return}
+  const avail=S.bases[from]||0;
+  if(ships>avail){toast('No hay tantas naves en origen');return}
+  const st=travelStats(from,to,S.t);
+  if(!st) return;
+  const fuel=st.fuel+Math.ceil(ships*0.15);
+  if(S.fuelPool<fuel){toast('Combustible insuficiente');log(`Fallo despacho: need ${fuel} comb`,'warn');return}
+  S.bases[from]=avail-ships;
+  S.fuelPool-=fuel;
+  const f={
+    id:'F'+Date.now().toString(36),
+    from,to,ships,fuelSpent:fuel,
+    units:st.units, duration:st.sec,
+    progress:0, started:S.t,
+    status:'transit'
+  };
+  S.fleets.push(f);
+  S.selectedFleet=f.id;
+  log(`Flota ${ships} naves: ${meta(from).name} → ${meta(to).name} · ${st.units} u · ${st.sec}s · −${fuel} comb`,'fleet');
   toast('Ruta desplegada');
-  save(); ui();
+  persist(); ui();
+}
+
+function resolveArrival(f){
+  const dest=worldState(f.to);
+  const m=meta(f.to);
+  if(dest.owner==='player'){
+    S.bases[f.to]=(S.bases[f.to]||0)+f.ships;
+    dest.garrison=(dest.garrison||0)+f.ships;
+    S.score+=Math.ceil(f.units*0.5);
+    log(`LLEGADA refuerzo en ${m.name}: +${f.ships} naves`,'arrive');
+    toast('Refuerzo en '+m.name);
+  } else if(dest.owner==='enemy'){
+    // assault
+    const def=dest.garrison||0;
+    const atk=f.ships;
+    let remainAtk=atk, remainDef=def;
+    // simple dice war
+    while(remainAtk>0 && remainDef>0){
+      const a=1+Math.floor(Math.random()*6), d=1+Math.floor(Math.random()*6);
+      if(a>d) remainDef--; else remainAtk--;
+    }
+    if(remainDef<=0 && remainAtk>0){
+      dest.owner='player';
+      dest.garrison=remainAtk;
+      S.bases[f.to]=(S.bases[f.to]||0)+remainAtk;
+      S.credits+=40; S.score+=50+Math.ceil(f.units);
+      log(`ASALTO OK ${m.name}: capturado con ${remainAtk} naves (def ${def})`,'combat');
+      toast('¡Capturado '+m.name+'!');
+    } else {
+      dest.garrison=Math.max(0,remainDef);
+      log(`ASALTO FALLIDO ${m.name}: perdidas ${atk} naves · def queda ${remainDef}`,'combat');
+      toast('Asalto fallido en '+m.name);
+      S.score+=5;
+    }
+  } else {
+    // neutral claim
+    dest.owner='player';
+    dest.garrison=f.ships;
+    S.bases[f.to]=(S.bases[f.to]||0)+f.ships;
+    S.credits+=15; S.score+=20;
+    log(`Coloniza ${m.name} con ${f.ships} naves`,'arrive');
+    toast('Colonizado '+m.name);
+  }
 }
 
 function abortSelected(){
-  const f=state.fleets.find(x=>x.id===state.selectedFleet);
-  if(!f||f.status!=='transit'||!f.route) return;
-  // emergency drop at progress position → nearest body conceptually: stay mid, snap to from with penalty
-  const refund=Math.floor(f.route.fuel*0.15*(1-f.route.progress));
-  f.fuel=Math.min(f.fuelMax, f.fuel+refund);
-  f.status='docked';
-  f.at=f.route.from;
-  log(`${f.name} ABORTA tránsito · reembolso ${refund} fuel`,'warn');
-  f.route=null;
-  state.stats.aborted++;
+  const f=S.fleets.find(x=>x.id===S.selectedFleet);
+  if(!f||f.status!=='transit'){toast('Nada que abortar');return}
+  const refund=Math.floor(f.fuelSpent*0.2*(1-f.progress));
+  const back=Math.max(1, Math.floor(f.ships*0.6));
+  S.fuelPool+=refund;
+  S.bases[f.from]=(S.bases[f.from]||0)+back;
+  log(`ABORT ${f.ships} naves ${f.from}→${f.to} · vuelve ${back} · +${refund} comb`,'warn');
+  S.fleets=S.fleets.filter(x=>x.id!==f.id);
   toast('Tránsito abortado');
-  save(); ui();
+  persist(); ui();
 }
 
-function tick(dtHours){
-  if(state.paused) return;
-  state.t+=dtHours;
-  for(const f of state.fleets){
-    if(f.status!=='transit'||!f.route) continue;
-    const dur=f.route.hours;
-    f.route.progress=Math.min(1, (state.t - f.route.startedAt)/dur);
-    if(f.route.progress>=1){
-      state.stats.distanceAU+=f.route.distAU;
-      f.at=f.route.to;
-      f.status='docked';
-      f.xp+=Math.ceil(f.route.distAU*2);
-      f.missions++;
-      const bonus=Math.ceil(f.route.distAU*8);
-      state.credits+=bonus;
-      log(`${f.name} llega a ${f.route.to.toUpperCase()} · +${bonus} créditos · XP flota ${f.xp}`,'arrive');
-      toast(f.name+' en '+f.route.to);
-      f.route=null;
-      // refuel partial at friendly ports
-      f.fuel=Math.min(f.fuelMax, f.fuel+10);
+function endTurn(){
+  // fuel recovery per turn
+  S.fuelPool+=4;
+  S.turn++;
+  // enemy pressure light
+  for(const w of S.worlds){
+    if(w.owner==='enemy') w.garrison=(w.garrison||0)+1;
+  }
+  log(`— Fin turno ${S.turn-1} · +4 comb · presión hostil +1 garrison —`,'turn');
+  persist(); ui(); toast('Turno '+S.turn);
+}
+
+function buyFuel(){
+  if(S.credits<15){toast('Sin créditos');return}
+  S.credits-=15; S.fuelPool+=10;
+  log('Compra fuel +10 (−15 créditos)','econ');
+  persist(); ui();
+}
+
+function tick(dt){
+  if(S.paused||S.closed) return;
+  S.t+=dt*SPEEDS[S.speedIdx];
+  for(const f of S.fleets){
+    if(f.status!=='transit') continue;
+    f.progress=Math.min(1, (S.t-f.started)/f.duration);
+    if(f.progress>=1){
+      f.status='arrived';
+      resolveArrival(f);
     }
   }
-  save();
+  S.fleets=S.fleets.filter(f=>f.status==='transit');
+  persist();
 }
 
-// --- input ---
-canvas.addEventListener('pointerdown',e=>{
-  drag={x:e.clientX,y:e.clientY,camX:cam.x,camY:cam.y,moved:0,id:e.pointerId};
-  canvas.setPointerCapture(e.pointerId);
-});
-canvas.addEventListener('pointermove',e=>{
-  if(!drag) return;
-  const dx=e.clientX-drag.x, dy=e.clientY-drag.y;
-  drag.moved+=Math.abs(dx)+Math.abs(dy);
-  cam.x=drag.camX - dx/cam.z;
-  cam.y=drag.camY - dy/cam.z;
-});
-canvas.addEventListener('pointerup',e=>{
-  if(!drag) return;
-  const moved=drag.moved; drag=null;
-  if(moved>10) return;
-  const w=screenToWorld(e.clientX,e.clientY);
-  // pick body
-  let best=null, bestD=1e9;
-  for(const b of BODIES){
-    if(b.kind==='belt') continue;
-    const p=bodyPos(b,state.t);
-    const d=Math.hypot(p.x-w.x,p.y-w.y);
-    const hit=(b.r+10)/cam.z;
-    if(d<hit && d<bestD){best=b;bestD=d}
-  }
-  // pick fleet
-  let bestF=null, bestFd=1e9;
-  for(const f of state.fleets){
-    const p=fleetWorldPos(f);
-    const d=Math.hypot(p.x-w.x,p.y-w.y);
-    if(d<14/cam.z && d<bestFd){bestF=f;bestFd=d}
-  }
-  if(bestF && bestFd < bestD){
-    state.selectedFleet=bestF.id;
-    if(bestF.status==='docked') state.selectedBody=bestF.at;
-    toast('Flota '+bestF.name);
-  } else if(best){
-    state.selectedBody=best.id;
-    toast(best.name);
-  }
-  save(); ui();
-});
-canvas.addEventListener('wheel',e=>{
-  e.preventDefault();
-  const z0=cam.z;
-  cam.z=Math.min(3.2, Math.max(0.25, cam.z * (e.deltaY>0?0.9:1.1)));
-},{passive:false});
-
-// --- draw ---
 function draw(){
   ctx.clearRect(0,0,W,H);
-  // starfield
   ctx.fillStyle='#03060e'; ctx.fillRect(0,0,W,H);
-  ctx.save();
   // orbits
-  for(const b of BODIES){
-    if(b.kind==='planet'||b.kind==='dwarf'){
-      const c=worldToScreen(0,0);
-      ctx.beginPath();
-      ctx.arc(c.x,c.y, b.orbit*AU_PX*cam.z, 0, Math.PI*2);
-      ctx.strokeStyle='rgba(94,242,208,0.08)';
-      ctx.lineWidth=1;
-      ctx.stroke();
-    }
-  }
-  // belt ring
-  {
-    const c=worldToScreen(0,0);
+  for(const w of WORLDS){
+    if(w.orbit<=0) continue;
+    const c=w2s(0,0);
     ctx.beginPath();
-    ctx.arc(c.x,c.y, 2.2*AU_PX*cam.z, 0, Math.PI*2);
-    ctx.strokeStyle='rgba(150,150,180,0.12)';
-    ctx.setLineDash([2,6]);
-    ctx.stroke();
-    ctx.setLineDash([]);
+    ctx.arc(c.x,c.y,w.orbit*AU_PX*cam.z,0,Math.PI*2);
+    ctx.strokeStyle='rgba(255,200,87,0.08)';
+    ctx.lineWidth=1; ctx.stroke();
   }
-  // routes (realtime)
-  for(const f of state.fleets){
-    if(f.status!=='transit'||!f.route) continue;
-    const a=BODIES.find(b=>b.id===f.route.from);
-    const b=BODIES.find(b=>b.id===f.route.to);
-    const pa=worldToScreen(bodyPos(a,state.t).x, bodyPos(a,state.t).y);
-    const pb=worldToScreen(bodyPos(b,state.t).x, bodyPos(b,state.t).y);
-    const pf=fleetWorldPos(f); const ps=worldToScreen(pf.x,pf.y);
+  // routes dashed + golden arc progress
+  for(const f of S.fleets){
+    const a=meta(f.from), b=meta(f.to);
+    const pa=pos(a,S.t), pb=pos(b,S.t);
+    const sa=w2s(pa.x,pa.y), sb=w2s(pb.x,pb.y);
+    const pf=fleetPos(f), sf=w2s(pf.x,pf.y);
+    // full route dotted
+    ctx.beginPath(); ctx.moveTo(sa.x,sa.y); ctx.lineTo(sb.x,sb.y);
+    ctx.setLineDash([5,6]); ctx.strokeStyle='rgba(255,255,255,0.22)'; ctx.lineWidth=1.5; ctx.stroke(); ctx.setLineDash([]);
+    // golden progress arc (chord)
+    ctx.beginPath(); ctx.moveTo(sa.x,sa.y); ctx.lineTo(sf.x,sf.y);
+    ctx.strokeStyle='#ffc857'; ctx.lineWidth=3; ctx.stroke();
+    // ship diamond
+    ctx.save();
+    ctx.translate(sf.x,sf.y);
+    ctx.rotate(Math.atan2(sb.y-sa.y,sb.x-sa.x));
     ctx.beginPath();
-    ctx.moveTo(pa.x,pa.y); ctx.lineTo(pb.x,pb.y);
-    ctx.strokeStyle='rgba(177,140,255,0.35)';
-    ctx.lineWidth=2; ctx.setLineDash([6,6]); ctx.stroke(); ctx.setLineDash([]);
-    // progressed segment
-    ctx.beginPath();
-    ctx.moveTo(pa.x,pa.y); ctx.lineTo(ps.x,ps.y);
-    ctx.strokeStyle='#b18cff'; ctx.lineWidth=2.5; ctx.stroke();
-    // arrow head at fleet
-    ctx.beginPath();
-    ctx.arc(ps.x,ps.y,5,0,Math.PI*2);
-    ctx.fillStyle='#b18cff'; ctx.fill();
+    ctx.moveTo(8,0); ctx.lineTo(-6,5); ctx.lineTo(-4,0); ctx.lineTo(-6,-5); ctx.closePath();
+    ctx.fillStyle='#fff2c0'; ctx.fill();
+    ctx.restore();
+    // percent label
+    ctx.fillStyle='#ffc857'; ctx.font='bold 11px system-ui';
+    ctx.fillText(Math.round(f.progress*100)+'%', sf.x+10, sf.y-8);
   }
-  // planned route preview
-  if(state.selectedFleet && state.destBody){
-    const f=state.fleets.find(x=>x.id===state.selectedFleet);
-    if(f && f.status==='docked' && f.at!==state.destBody){
-      const a=BODIES.find(b=>b.id===f.at), b=BODIES.find(b=>b.id===state.destBody);
-      const pa=worldToScreen(bodyPos(a,state.t).x, bodyPos(a,state.t).y);
-      const pb=worldToScreen(bodyPos(b,state.t).x, bodyPos(b,state.t).y);
-      ctx.beginPath(); ctx.moveTo(pa.x,pa.y); ctx.lineTo(pb.x,pb.y);
-      ctx.strokeStyle='rgba(255,200,87,0.55)'; ctx.lineWidth=1.5; ctx.setLineDash([4,4]); ctx.stroke(); ctx.setLineDash([]);
-    }
-  }
-  // bodies
-  for(const b of BODIES){
-    if(b.kind==='belt') continue;
-    const p=bodyPos(b,state.t);
-    const s=worldToScreen(p.x,p.y);
-    const rad=Math.max(3, b.r*cam.z*0.35);
-    if(b.kind==='star'){
+  // worlds
+  for(const w of WORLDS){
+    const p=pos(w,S.t); const s=w2s(p.x,p.y);
+    const st=worldState(w.id);
+    const rad=Math.max(3,w.r*cam.z*0.35);
+    if(w.kind==='star'){
       const g=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,rad*3);
-      g.addColorStop(0,'#fff2c0'); g.addColorStop(0.4,b.color); g.addColorStop(1,'rgba(0,0,0,0)');
+      g.addColorStop(0,'#fff'); g.addColorStop(0.35,w.color); g.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=g; ctx.beginPath(); ctx.arc(s.x,s.y,rad*3,0,Math.PI*2); ctx.fill();
     }
-    ctx.beginPath(); ctx.arc(s.x,s.y,rad,0,Math.PI*2);
-    ctx.fillStyle=b.color; ctx.fill();
-    if(state.selectedBody===b.id || state.destBody===b.id){
-      ctx.strokeStyle=state.destBody===b.id? '#ffc857' : '#5ef2d0';
-      ctx.lineWidth=2; ctx.beginPath(); ctx.arc(s.x,s.y,rad+4,0,Math.PI*2); ctx.stroke();
-    }
-    if(cam.z>0.45){
-      ctx.fillStyle='rgba(232,238,252,0.85)';
-      ctx.font='11px system-ui';
-      ctx.fillText(b.name, s.x+rad+4, s.y+3);
+    ctx.beginPath(); ctx.arc(s.x,s.y,rad,0,Math.PI*2); ctx.fillStyle=w.color; ctx.fill();
+    if(st.owner==='player'){ ctx.strokeStyle='#5ef2d0'; ctx.lineWidth=2; ctx.stroke(); }
+    if(st.owner==='enemy'){ ctx.strokeStyle='#ff4d3a'; ctx.lineWidth=2; ctx.stroke(); }
+    if(cam.z>0.4){
+      ctx.fillStyle='#e8eefc'; ctx.font='11px system-ui';
+      const ships=S.bases[w.id]||0;
+      ctx.fillText(w.name+(ships?` ·${ships}`:''), s.x+rad+4, s.y+3);
     }
   }
-  // fleets docked markers
-  for(const f of state.fleets){
-    if(f.status==='transit') continue;
-    const p=fleetWorldPos(f); const s=worldToScreen(p.x,p.y);
-    ctx.beginPath();
-    ctx.moveTo(s.x, s.y-10); ctx.lineTo(s.x+7,s.y+5); ctx.lineTo(s.x-7,s.y+5); ctx.closePath();
-    ctx.fillStyle=state.selectedFleet===f.id?'#ffc857':'#5ef2d0';
-    ctx.fill();
-  }
-  ctx.restore();
 }
 
 function renderLog(){
-  const box=document.getElementById('liveLog');
-  box.innerHTML=state.logs.slice(0,40).map(e=>`<div>[t+${e.t.toFixed(1)}h] ${e.msg}</div>`).join('')||'<div>Sin eventos</div>';
+  document.getElementById('liveLog').innerHTML=S.logs.slice(0,50).map(e=>
+    `<div>[T${e.turn} · ${e.t.toFixed(1)}s] ${e.msg}</div>`).join('')||'<div>Sin eventos</div>';
 }
 
 function ui(){
-  document.getElementById('simTime').textContent=state.t.toFixed(1);
-  document.getElementById('credits').textContent=state.credits;
-  document.getElementById('campaignName').textContent=state.name;
-  document.getElementById('btnPause').textContent=state.paused?'▶ Play':'⏸ Pausa';
-  document.getElementById('btnSpeed').textContent='×'+SPEEDS[state.speedIdx];
-
-  const body=BODIES.find(b=>b.id===state.selectedBody);
-  if(body){
-    document.getElementById('bodyName').textContent=body.name;
-    const docked=state.fleets.filter(f=>f.at===body.id && f.status==='docked').map(f=>f.name).join(', ')||'ninguna';
-    document.getElementById('bodyMeta').textContent=`Tipo: ${body.kind} · órbita ${body.orbit||0} AU · flotas: ${docked}`;
-  } else {
-    document.getElementById('bodyName').textContent='Toca un planeta';
-    document.getElementById('bodyMeta').textContent='Selecciona origen/destino en el mapa.';
-  }
-
-  const list=document.getElementById('fleetList');
-  list.innerHTML=state.fleets.map(f=>{
-    const on=state.selectedFleet===f.id?'on':'';
-    const pct=f.status==='transit'&&f.route? Math.round(f.route.progress*100): (f.fuel/f.fuelMax*100|0);
-    const st=f.status==='transit'?`en ruta ${Math.round((f.route.progress||0)*100)}%`:`en ${f.at} · fuel ${f.fuel}/${f.fuelMax}`;
-    return `<div class="fleet ${on}" data-f="${f.id}"><div><div class="name">${f.name}</div><div class="meta">${f.ships} naves · ${st}</div><div class="bar"><i style="width:${pct}%"></i></div></div></div>`;
+  document.getElementById('turn').textContent=S.turn;
+  document.getElementById('simTime').textContent=S.t.toFixed(1);
+  document.getElementById('credits').textContent=S.credits;
+  document.getElementById('fuelPool').textContent=S.fuelPool;
+  document.getElementById('btnPause').textContent=S.paused?'▶':'⏸';
+  document.getElementById('btnSpeed').textContent='×'+SPEEDS[S.speedIdx];
+  updateRouteCalc();
+  // worlds
+  document.getElementById('worldList').innerHTML=WORLDS.filter(w=>w.kind!=='star').map(w=>{
+    const st=worldState(w.id);
+    const own=st.owner==='player'?'tú':(st.owner==='enemy'?'hostil':'neutral');
+    return `<div>${w.name}: <b style="color:${st.owner==='player'?'#5ef2d0':(st.owner==='enemy'?'#ff4d3a':'#8b93a8')}">${own}</b> · gar ${st.garrison||0} · naves ${S.bases[w.id]||0}</div>`;
   }).join('');
-  list.querySelectorAll('[data-f]').forEach(el=>{
-    el.onclick=()=>{state.selectedFleet=el.getAttribute('data-f'); save(); ui()};
+  // fleets
+  document.getElementById('fleetList').innerHTML=(S.fleets.map(f=>{
+    const on=S.selectedFleet===f.id?'on':'';
+    const pct=Math.round(f.progress*100);
+    return `<div class="fleet ${on}" data-id="${f.id}"><div class="name">${f.ships} naves · ${meta(f.from).name}→${meta(f.to).name}</div>
+      <div class="meta">${f.units} u · ${pct}% · ETA ${(f.duration*(1-f.progress)).toFixed(1)}s · comb gastado ${f.fuelSpent}</div>
+      <div class="bar"><i style="width:${pct}%"></i></div></div>`;
+  }).join('')||'<div class="muted">Sin flotas en tránsito. Despacha desde el panel.</div>');
+  document.querySelectorAll('#fleetList [data-id]').forEach(el=>{
+    el.onclick=()=>{S.selectedFleet=el.getAttribute('data-id');persist();ui()};
   });
-
-  const f=state.fleets.find(x=>x.id===state.selectedFleet);
-  const canLaunch=f && f.status==='docked' && state.destBody && state.destBody!==f.at;
-  document.getElementById('btnLaunch').disabled=!canLaunch;
-  document.getElementById('btnAbort').disabled=!(f&&f.status==='transit');
-  document.getElementById('btnAnchor').disabled=!state.selectedBody;
-
-  if(f && state.destBody && f.status==='docked'){
-    const r=calcRoute(f.at, state.destBody, f);
-    if(r) document.getElementById('routePreview').textContent=
-      `Ruta ${r.from}→${r.to}: ${r.distAU} AU · ${r.hours} h · fuel ${r.fuel} (tienes ${f.fuel})`;
-  } else if(f&&f.status==='transit'&&f.route){
-    const left=(1-f.route.progress)*f.route.hours;
-    document.getElementById('routePreview').textContent=
-      `En vuelo ${f.route.from}→${f.route.to}: ${(f.route.progress*100).toFixed(0)}% · ETA ${left.toFixed(1)} h`;
-  } else {
-    document.getElementById('routePreview').textContent='Elige flota + Anclar destino. Tiempo/combustible por distancia AU.';
-  }
-
-  // inflight panel
-  const flying=state.fleets.filter(x=>x.status==='transit');
-  document.getElementById('inflight').innerHTML=flying.length? flying.map(x=>{
-    const p=Math.round(x.route.progress*100);
-    const left=((1-x.route.progress)*x.route.hours).toFixed(1);
-    return `<div style="margin-bottom:6px"><b style="color:var(--violet)">${x.name}</b><br/>${x.route.from} → ${x.route.to}<br/><div class="bar"><i style="width:${p}%"></i></div>${p}% · ${left}h rest. · ${x.route.distAU} AU</div>`;
-  }).join('') : 'Ninguna flota en tránsito.';
-
+  // refresh origin ship counts without resetting selection if possible
+  const o=document.getElementById('selOrigin').value;
+  const d=document.getElementById('selDest').value;
+  fillSelects();
+  document.getElementById('selOrigin').value=o;
+  document.getElementById('selDest').value=d;
   renderLog();
 }
 
-document.getElementById('btnAnchor').onclick=()=>{
-  if(!state.selectedBody) return;
-  state.destBody=state.selectedBody;
-  toast('Destino: '+state.selectedBody);
-  save(); ui();
-};
-document.getElementById('btnCenter').onclick=()=>{
-  if(!state.selectedBody){cam.x=0;cam.y=0;return}
-  const p=bodyPos(BODIES.find(b=>b.id===state.selectedBody), state.t);
-  cam.x=p.x; cam.y=p.y;
-};
-document.getElementById('btnLaunch').onclick=launchSelected;
+// input map
+canvas.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,cx:cam.x,cy:cam.y,m:0};canvas.setPointerCapture(e.pointerId)});
+canvas.addEventListener('pointermove',e=>{
+  if(!drag)return; const dx=e.clientX-drag.x,dy=e.clientY-drag.y; drag.m+=Math.abs(dx)+Math.abs(dy);
+  cam.x=drag.cx-dx/cam.z; cam.y=drag.cy-dy/cam.z;
+});
+canvas.addEventListener('pointerup',()=>{drag=null});
+canvas.addEventListener('wheel',e=>{e.preventDefault();cam.z=Math.min(2.8,Math.max(0.25,cam.z*(e.deltaY>0?0.9:1.1)))},{passive:false});
+
+document.getElementById('selOrigin').onchange=updateRouteCalc;
+document.getElementById('selDest').onchange=updateRouteCalc;
+document.getElementById('inpShips').oninput=updateRouteCalc;
+document.getElementById('btnLaunch').onclick=launch;
 document.getElementById('btnAbort').onclick=abortSelected;
-document.getElementById('btnPause').onclick=()=>{state.paused=!state.paused; save(); ui()};
-document.getElementById('btnSpeed').onclick=()=>{state.speedIdx=(state.speedIdx+1)%SPEEDS.length; save(); ui()};
-document.getElementById('btnNewCamp').onclick=()=>{
-  // archive current
-  archiveCampaign('manual_end');
-  state=newCampaign();
-  log('Nueva campaña iniciada','system');
-  save(); ui(); toast('Nueva campaña');
-};
+document.getElementById('btnEndTurn').onclick=endTurn;
+document.getElementById('btnBuyFuel').onclick=buyFuel;
+document.getElementById('btnPause').onclick=()=>{S.paused=!S.paused;persist();ui()};
+document.getElementById('btnSpeed').onclick=()=>{S.speedIdx=(S.speedIdx+1)%SPEEDS.length;persist();ui()};
+
+function archiveCampaign(){
+  const hist=load(KEY_H,[]);
+  // group logs by turn for readable archive
+  const byTurn={};
+  for(const e of [...S.logs].reverse()){
+    (byTurn[e.turn]=byTurn[e.turn]||[]).push(e);
+  }
+  const entry={
+    id:S.id, name:S.name, closedAt:new Date().toISOString(),
+    turn:S.turn, t:S.t, credits:S.credits, score:S.score, fuelPool:S.fuelPool,
+    worlds:S.worlds.map(w=>({id:w.id,name:meta(w.id).name,owner:w.owner,garrison:w.garrison})),
+    bases:{...S.bases},
+    turns:Object.keys(byTurn).sort((a,b)=>a-b).map(t=>({turn:+t, events:byTurn[t]})),
+    logs:S.logs.slice(0,200)
+  };
+  hist.unshift(entry);
+  save(KEY_H, hist.slice(0,40));
+  log('Campaña cerrada y guardada en Archivo · score '+S.score,'system');
+  toast('Guardado en Archivo');
+  S=newState();
+  fillSelects();
+  persist(); ui();
+}
+
+document.getElementById('btnArchive').onclick=archiveCampaign;
 document.getElementById('btnHistory').onclick=()=>{
-  const hist=loadJSON(KEY_HIST,[]);
+  const hist=load(KEY_H,[]);
   const box=document.getElementById('histBody');
-  if(!hist.length){box.innerHTML='<p class="muted">Sin campañas archivadas aún.</p>'}
+  if(!hist.length){box.innerHTML='<p class="muted">Archivo vacío. Cierra una campaña para guardarla.</p>'}
   else{
-    box.innerHTML=`<table><thead><tr><th>Campaña</th><th>t+</th><th>Viajes</th><th>AU</th><th>Fuel</th><th>Créd.</th></tr></thead><tbody>${
-      hist.slice(0,30).map(h=>`<tr><td>${h.name}</td><td>${h.t.toFixed(1)}h</td><td>${h.stats.trips}</td><td>${h.stats.distanceAU.toFixed(1)}</td><td>${h.stats.fuelBurned}</td><td>${h.credits}</td></tr>`).join('')
-    }</tbody></table>
-    <h3 style="margin-top:12px;color:var(--gold);font-size:12px">Últimos logs de la más reciente</h3>
-    <div class="logbox">${(hist[0].logs||[]).slice(0,25).map(e=>`<div>[${e.t.toFixed(1)}] ${e.msg}</div>`).join('')}</div>`;
+    box.innerHTML=hist.map(h=>`
+      <details class="camp">
+        <summary>${h.name} · score ${h.score} · T${h.turn} · ${h.closedAt?.slice(0,19)||''}</summary>
+        <p class="muted">Créditos ${h.credits} · fuel ${h.fuelPool} · t+${(h.t||0).toFixed(1)}s</p>
+        <div class="muted">Mundos: ${(h.worlds||[]).map(w=>w.name+':'+w.owner).join(' · ')}</div>
+        <div style="margin-top:8px">${(h.turns||[]).map(t=>`
+          <div class="turn"><b>Turno ${t.turn}</b>${(t.events||[]).map(e=>`<div>· ${e.msg}</div>`).join('')}</div>
+        `).join('')}</div>
+      </details>`).join('');
   }
   document.getElementById('histModal').classList.add('on');
 };
 document.getElementById('btnCloseHist').onclick=()=>document.getElementById('histModal').classList.remove('on');
-document.getElementById('btnClearHist').onclick=()=>{
-  if(confirm('¿Borrar todo el histórico local?')){localStorage.removeItem(KEY_HIST); document.getElementById('histBody').innerHTML='<p class="muted">Vacío.</p>'}
-};
+document.getElementById('btnClearHist').onclick=()=>{if(confirm('¿Vaciar Archivo?')){localStorage.removeItem(KEY_H);document.getElementById('histBody').innerHTML='<p class="muted">Vacío</p>'}};
 document.getElementById('btnExport').onclick=()=>{
-  // CSV of current campaign logs + fleet
-  const rows=[['campaign','t_hours','event','kind','iso']];
-  for(const e of [...state.logs].reverse()){
-    rows.push([state.name, e.t.toFixed(2), JSON.stringify(e.msg), e.kind, e.at]);
-  }
+  const rows=[['turn','t_sec','kind','msg']];
+  for(const e of [...S.logs].reverse()) rows.push([e.turn,e.t.toFixed(2),e.kind,JSON.stringify(e.msg)]);
   rows.push([]);
-  rows.push(['fleet','ships','fuel','xp','missions','status','at']);
-  for(const f of state.fleets){
-    rows.push([f.name,f.ships,f.fuel,f.xp,f.missions,f.status,f.at]);
-  }
+  rows.push(['world','owner','garrison','ships_base']);
+  for(const w of S.worlds) rows.push([w.id,w.owner,w.garrison,S.bases[w.id]||0]);
   rows.push([]);
-  rows.push(['metric','value']);
-  rows.push(['distance_AU',state.stats.distanceAU]);
-  rows.push(['fuel_burned',state.stats.fuelBurned]);
-  rows.push(['trips',state.stats.trips]);
-  rows.push(['aborted',state.stats.aborted]);
-  rows.push(['credits',state.credits]);
+  rows.push(['score',S.score],['credits',S.credits],['fuel',S.fuelPool],['turn',S.turn]);
   const csv=rows.map(r=>r.join(',')).join('\n');
-  const blob=new Blob([csv],{type:'text/csv'});
   const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download=`voidcrown_orbit_${state.id}.csv`;
-  a.click();
-  log('CSV exportado (rendimiento comandantes)','system');
-  toast('CSV descargado');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download=`orbit_campaign_${S.id}.csv`; a.click();
+  toast('CSV exportado');
 };
 
-function archiveCampaign(reason){
-  const hist=loadJSON(KEY_HIST,[]);
-  hist.unshift({
-    id:state.id, name:state.name, t:state.t, credits:state.credits,
-    stats:{...state.stats}, fleets:state.fleets.map(f=>({name:f.name,xp:f.xp,missions:f.missions,ships:f.ships})),
-    logs:state.logs.slice(0,80), reason, archivedAt:new Date().toISOString()
-  });
-  saveJSON(KEY_HIST, hist.slice(0,40));
-}
-
-// sim loop
+fillSelects();
+log('Motor de flotas online · origen/destino/naves · dist→tiempo/fuel · Archivo de campañas','system');
+ui();
 let last=performance.now();
 function frame(now){
-  const realDt=Math.min(0.1,(now-last)/1000); last=now;
-  // 1 real sec -> speed hours (base 0.25h/s at x1 for readable motion)
-  const simDt=realDt * 0.35 * SPEEDS[state.speedIdx];
-  tick(simDt);
+  const dt=Math.min(0.1,(now-last)/1000); last=now;
+  tick(dt); // 1 real sec ≈ 1 sim sec at x1 (calibrado a ~4s Tierra-Marte)
   draw();
-  // light UI throttle
-  if(!frame._u || now-frame._u>200){frame._u=now; ui()}
+  if(!frame._u||now-frame._u>250){frame._u=now;ui()}
   requestAnimationFrame(frame);
 }
-log('Órbita online · flotas listas en Tierra/Marte/Júpiter','system');
-ui();
 requestAnimationFrame(frame);
 })();
 </script>
