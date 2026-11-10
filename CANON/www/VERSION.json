@@ -1,34 +1,16 @@
 {
   "name": "VOIDCROWN",
-  "version": "73.0.0-ABSORB-BEST",
-  "versionCode": 7300,
+  "version": "73.1.0-DRIVE-LAYERS-12.5",
+  "versionCode": 7310,
   "package": "com.cisc.voidcrown.diazero",
-  "entry": "modules/consejo.html",
-  "architecture": "global-command-spine",
-  "absorbed_best_of": {
-    "v24.1.1": "iconos desastre, lecciones pack (no hub multiagente)",
-    "v26 OMEGA": "15 armas NAT/TECH/MEGA/DEF, atm, voxels philosophy, multi-mundo, mp3 Viejo, earth day/night/clouds, MutationPatch+diary",
-    "v67": "void smash lab three",
-    "v68": "earth 4k textures HQ (via v70 absorb)",
-    "v70": "RISK 42, facciones, fenómenos, Viejo, KHAOS, FLACKO, audio sfx, entry único",
-    "v71": "UNICO policy, smash module",
-    "v72.1": "spine global, consejo, órbita flotas, troop bank, ceremonias, APK v2/v3 installable"
-  },
-  "rejected": [
-    "multi-html cemetery",
-    "1GB v68 dump",
-    "ciscsino in apk",
-    "agent home"
+  "entry": "open.html",
+  "continuity": "12.5.0-BRUTAL layers — not a new copy",
+  "layers": [
+    "mundo",
+    "estrato",
+    "legion",
+    "marcos"
   ],
-  "modes": [
-    "consejo",
-    "risk",
-    "orbita",
-    "castigo_multi",
-    "khaos"
-  ],
-  "spine": "js/voidcrown_global.js",
-  "castigo_worlds": 6,
-  "castigo_weapons": 16,
-  "apk_sign": "v2+v3 stable keystore"
+  "skill_note": "14.0 oro skill is stale; LEE_ESTO tip is 73.1 with 12.5 theater",
+  "drive_dedupe": "CANON 01_JUEGO empty; tip on GitHub; LEGION/Mesh/Ciscsino not tip"
 }
