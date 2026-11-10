@@ -1,0 +1,30 @@
+{
+  "id": "EDAI-2026-11-10-72.1-GLOBAL-COMMAND",
+  "version": "72.1.0-GLOBAL-COMMAND",
+  "change": "Sistema de mando global: un solo estado, bus de eventos, RISK↔ÓRBITA troop bank, CASTIGO daño acumulativo, ceremonias de rango, chip HUD unificado",
+  "deps": [
+    "js/voidcrown_global.js",
+    "js/ceremony.js",
+    "js/commander_meta.js (compat mirror)",
+    "modules/consejo.html",
+    "modules/orbita_flotas.html",
+    "modules/void_smash.html",
+    "index.html RISK hooks"
+  ],
+  "tests": [
+    "Consejo muestra badge+XP+troop bank",
+    "RISK conquista LEGION → emit RISK_CONQUEST → XP sube en Consejo",
+    "Órbita asalto win → troop bank >0 → RISK reinforce placeLeft aumenta",
+    "CASTIGO impact → crust/mantle/core persisten al recargar página",
+    "Ascenso de rango encola ceremonia modal",
+    "CSV export desde Consejo"
+  ],
+  "rollback": "localStorage.removeItem('vc-global-command-v1'); volver a 71 UNICO www si hace falta",
+  "non_goals": [
+    "No 7 módulos aislados",
+    "No Sheets write sin Web App del usuario",
+    "No Castigo multi-mundo en este paso",
+    "No GPT in-APK"
+  ],
+  "next": ["APK 72.1 firmado", "Castigo multi-mundo sin duplicar motor", "Sheets Web App validation"]
+}
