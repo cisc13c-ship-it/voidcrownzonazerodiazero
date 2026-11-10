@@ -1,17 +1,22 @@
-# ÓRBITA · Flotas tácticas
+# ÓRBITA · Motor de flotas (verificado)
 
-## Qué hace
-- Mapa del sistema (Sol → Saturno) con órbitas vivas
-- Rutas de flotas **en tiempo real** (línea trazo + progreso)
-- Movimiento entre cuerpos con **tiempo de viaje** y **combustible** según distancia AU
-- Selección flota/destino, despacho, abortar, pan/zoom
-- **Histórico de campañas** (localStorage) + **export CSV** de logs/rendimiento
+## Motor
+- Eliges **origen, destino y nº de naves**
+- Distancia orbital (instantánea en mapa) → **unidades u**
+- Tiempo ≈ u × (4/9.5) s · Fuel ≈ u × (6/9.5) (+0.15/nave)
+- Ref: Tierra→Marte ~9.5 u / ~4 s / ~6 comb · Tierra→Planeta X ~125 u / ~48 s / ~70 comb
+- Fuel: **+4 / turno** o **10 comb = 15 créditos**
+- Llegadas: **refuerzo** (tuyo) / **asalto** (hostil) / coloniza (neutral)
 
-## Fórmulas
-- distancia AU = distancia euclídea en mapa / escala
-- horas ≈ dist × 4.5 × factor tamaño flota
-- fuel ≈ dist × 12 × (1 + 1% por nave)
+## Mapa táctico
+- Órbitas en vivo
+- Ruta punteada + **arco dorado** con % de avance
+- Nave viajando sobre la cuerda
+
+## Histórico
+- **Cerrar campaña → Archivo**: guarda bitácora turno a turno
+- Archivo: desplegable por partida (mundos, score, eventos)
+- Export CSV
 
 ## Controles
-- Toca planeta · **Anclar destino** · elige flota · **Desplegar ruta**
-- Pausa / ×1×2×4×8 · Histórico · Export CSV
+Desplegar · Abortar · Fin de turno · Comprar fuel · ×1..8 · Archivo
