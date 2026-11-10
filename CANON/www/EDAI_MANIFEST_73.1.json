@@ -1,0 +1,20 @@
+{
+  "id": "EDAI-2026-11-10-73.1-BRUTAL-LAYERS",
+  "version": "73.1.0-BRUTAL-LAYERS",
+  "change": "Absorbe mundo Drive 12.5.0-BRUTAL como capa de apertura del tip 73; Legión autopilot con guard de control; marcos táctico/teatro/void; dedupe docs Drive",
+  "deps": [
+    "modules/teatro_brutal.html",
+    "voidcrown_global.js",
+    "index.html aiTurn guard",
+    "docs/DRIVE_DEDUP_ABSORB.md"
+  ],
+  "tests": [
+    "open.html → teatro 12.5",
+    "capas clickeables",
+    "Legión no actúa con tab oculto",
+    "grieta sube opacity + diary",
+    "links a RISK/Órbita/Castigo"
+  ],
+  "rollback": "open.html → consejo.html; quitar teatro_brutal",
+  "dedupe": "un tip; 14.0 no se reabre como oro; wifi aparte"
+}
