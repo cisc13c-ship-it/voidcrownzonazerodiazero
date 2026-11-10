@@ -1,7 +1,7 @@
 {
   "name": "VOIDCROWN",
-  "version": "73.1.0-BRUTAL-LAYERS",
-  "versionCode": 7310,
+  "version": "73.2.0-COMPILED",
+  "versionCode": 7320,
   "package": "com.cisc.voidcrown.diazero",
   "entry": "modules/teatro_brutal.html",
   "architecture": "global-command-spine",
@@ -40,5 +40,7 @@
     "legion",
     "marcos"
   ],
-  "note": "14.0 sigue en archivo histórico; no es tip paralelo. Skill relevo desactualizado vs LEE_ESTO."
+  "note": "14.0 sigue en archivo histórico; no es tip paralelo. Skill relevo desactualizado vs LEE_ESTO.",
+  "compiled_at": "2026-11-10T11:31:29.986224+00:00",
+  "project": "VOIDCROWN_UNICO"
 }
