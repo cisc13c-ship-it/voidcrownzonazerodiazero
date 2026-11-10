@@ -1,16 +1,31 @@
 {
-  "tip": "71.1.0-ORBITA",
-  "modules": [
-    "risk",
+  "name": "VOIDCROWN",
+  "version": "71.1.0-ORBITA-MOTOR",
+  "versionCode": 7110,
+  "package": "com.cisc.voidcrown.diazero",
+  "entry": "index.html",
+  "modes": [
+    "risk_dia_zero",
     "void_smash",
+    "khaos_legacy",
     "orbita_flotas",
-    "khaos_legacy"
+    "archivo_viejo"
   ],
-  "orbit": {
-    "realtime_routes": true,
-    "travel_time": true,
-    "fuel_by_AU": true,
-    "campaign_history": true,
-    "csv_export": true
+  "absorbed": [
+    "v70-unificado",
+    "v67-void_smash",
+    "voxels-polar",
+    "population-counter",
+    "v69-viejo-archivo"
+  ],
+  "sha_note": "built by absorb pipeline 2026-11-10",
+  "single_game": true,
+  "orbit_motor": {
+    "origin_dest_ships": true,
+    "distance_time_fuel": true,
+    "fuel_per_turn_or_buy": true,
+    "arrival_reinforce_or_assault": true,
+    "golden_arc_progress": true,
+    "campaign_archive_turn_by_turn": true
   }
 }
