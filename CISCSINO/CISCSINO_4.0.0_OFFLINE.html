@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<meta name="theme-color" content="#0a0c12"/>
+<title>Ciscsino 4.0 · Casino Offline</title>
+<style>
+:root{--bg:#07090f;--card:#12161f;--gold:#e0b84a;--g:#3ddc97;--t:#e8eef8;--m:#8b95a8;--danger:#ff5a6a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:radial-gradient(1200px 600px at 50% -10%,#1a1230,var(--bg));color:var(--t);min-height:100dvh}
+header{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.06)}
+header h1{font-size:14px;letter-spacing:.18em;color:var(--gold)}
+.chip{font-size:12px;background:rgba(224,184,74,.12);border:1px solid rgba(224,184,74,.35);padding:6px 10px;border-radius:999px}
+main{padding:16px;max-width:520px;margin:0 auto}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:16px;margin-bottom:12px}
+.card h2{font-size:13px;letter-spacing:.12em;color:var(--gold);margin-bottom:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+button{flex:1;min-height:48px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:#1a2030;color:var(--t);font-weight:700;font-size:13px}
+button.primary{background:linear-gradient(180deg,#3ddc97,#1a9e6c);color:#04140c;border:0}
+button.gold{background:linear-gradient(180deg,#e0b84a,#a67c1a);color:#1a1200;border:0}
+button:active{transform:scale(.98)}
+.slots{display:flex;gap:8px;justify-content:center;font-size:42px;margin:18px 0;letter-spacing:4px}
+.muted{color:var(--m);font-size:12px;line-height:1.45}
+#consent{position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;z-index:20;padding:20px}
+#consent .box{max-width:420px;background:var(--card);border-radius:18px;padding:20px;border:1px solid rgba(224,184,74,.3)}
+#consent h2{color:var(--gold);margin-bottom:8px}
+.hidden{display:none!important}
+.log{max-height:120px;overflow:auto;font-size:11px;color:var(--m);margin-top:8px}
+.xp{height:8px;background:#0a0e16;border-radius:99px;overflow:hidden;margin-top:8px}
+.xp>i{display:block;height:100%;background:linear-gradient(90deg,var(--g),var(--gold));width:0%}
+</style>
+</head>
+<body>
+<div id="consent">
+  <div class="box">
+    <h2>Ciscsino · Consentimiento</h2>
+    <p class="muted">Casino <b>100% offline</b>. No hay servidor (se perdió). Fichas locales, sin dinero real, sin malware, sin auto-install. Al chile: es un juego de mesa digital en tu bolsillo.</p>
+    <div class="row" style="margin-top:14px">
+      <button class="primary" id="btnAgree" type="button">Acepto · Entrar</button>
+    </div>
+  </div>
+</div>
+<header>
+  <h1>CISCSINO 4.0</h1>
+  <div class="chip">Fichas <span id="chips">1000</span> · XP <span id="xp">0</span></div>
+</header>
+<main>
+  <div class="card">
+    <h2>TRAGAMONEDAS</h2>
+    <div class="slots" id="slots">🍒 🍋 7️⃣</div>
+    <div class="row">
+      <button type="button" id="bet10">Apuesta 10</button>
+      <button type="button" id="bet50">Apuesta 50</button>
+      <button class="gold" type="button" id="spin">GIRAR</button>
+    </div>
+    <div class="xp"><i id="xpBar"></i></div>
+    <p class="muted" id="msg">Sin servidor. Todo vive en este HTML + localStorage.</p>
+    <div class="log" id="log"></div>
+  </div>
+  <div class="card">
+    <h2>MISIONES (offline)</h2>
+    <ul class="muted" id="missions" style="padding-left:18px"></ul>
+  </div>
+  <div class="card">
+    <h2>NOTA</h2>
+    <p class="muted">Antes: Red Legión / mesh / OTA. Ahora: casino resiliente sin cloud. Si recuperas servidor, se puede re-enganchar OTA después. Producto <b>aparte</b> de VOIDCROWN.</p>
+  </div>
+</main>
+<script>
+const KEY='ciscsino-4-offline';
+const SYMS=['🍒','🍋','7️⃣','⭐','💎','🔔','🍀'];
+const missions=[
+  {id:'spin10',t:'Gira 10 veces',need:10,field:'spins',xp:20},
+  {id:'win3',t:'Gana 3 veces',need:3,field:'wins',xp:40},
+  {id:'chips2k',t:'Llega a 2000 fichas',need:2000,field:'maxChips',xp:60}
+];
+function load(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return{}}}
+function save(s){localStorage.setItem(KEY,JSON.stringify(s))}
+let S=Object.assign({chips:1000,xp:0,spins:0,wins:0,maxChips:1000,bet:10,consent:false,done:{}},load());
+if(S.consent) document.getElementById('consent').classList.add('hidden');
+document.getElementById('btnAgree').onclick=()=>{S.consent=true;save(S);document.getElementById('consent').classList.add('hidden')};
+function log(m){const el=document.getElementById('log');el.innerHTML=`<div>${new Date().toLocaleTimeString()} · ${m}</div>`+el.innerHTML}
+function ui(){
+  document.getElementById('chips').textContent=S.chips;
+  document.getElementById('xp').textContent=S.xp;
+  document.getElementById('xpBar').style.width=Math.min(100,(S.xp%100))+'%';
+  document.getElementById('missions').innerHTML=missions.map(m=>{
+    const cur=m.field==='maxChips'?S.maxChips:S[m.field];
+    const ok=S.done[m.id]||cur>=m.need;
+    if(ok&&!S.done[m.id]){S.done[m.id]=true;S.xp+=m.xp;save(S);log('Misión OK +'+m.xp+' XP: '+m.t)}
+    return `<li>${ok?'✅':'⬜'} ${m.t} (${Math.min(cur,m.need)}/${m.need})</li>`;
+  }).join('');
+  save(S);
+}
+document.getElementById('bet10').onclick=()=>{S.bet=10;document.getElementById('msg').textContent='Apuesta = 10'};
+document.getElementById('bet50').onclick=()=>{S.bet=50;document.getElementById('msg').textContent='Apuesta = 50'};
+document.getElementById('spin').onclick=()=>{
+  if(S.chips<S.bet){log('Sin fichas');return}
+  S.chips-=S.bet; S.spins++;
+  const a=SYMS[Math.floor(Math.random()*SYMS.length)];
+  const b=SYMS[Math.floor(Math.random()*SYMS.length)];
+  const c=SYMS[Math.floor(Math.random()*SYMS.length)];
+  document.getElementById('slots').textContent=`${a} ${b} ${c}`;
+  let win=0;
+  if(a===b&&b===c) win=S.bet*12;
+  else if(a===b||b===c||a===c) win=S.bet*2;
+  if(win){S.chips+=win;S.wins++;log('Ganaste +'+win);document.getElementById('msg').textContent='¡Pago '+win+'!'}
+  else {log('Nada…');document.getElementById('msg').textContent='Sigue intentando'}
+  S.maxChips=Math.max(S.maxChips,S.chips);
+  ui();
+};
+ui();
+</script>
+</body>
+</html>
