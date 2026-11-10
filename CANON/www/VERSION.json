@@ -1,7 +1,7 @@
 {
   "name": "VOIDCROWN",
-  "version": "73.2.0-COMPILED",
-  "versionCode": 7320,
+  "version": "73.2.1-FIX-CONFLICT",
+  "versionCode": 7321,
   "package": "com.cisc.voidcrown.diazero",
   "entry": "modules/teatro_brutal.html",
   "architecture": "global-command-spine",
@@ -41,6 +41,7 @@
     "marcos"
   ],
   "note": "14.0 sigue en archivo histórico; no es tip paralelo. Skill relevo desactualizado vs LEE_ESTO.",
-  "compiled_at": "2026-11-10T11:31:29.986224+00:00",
-  "project": "VOIDCROWN_UNICO"
+  "compiled_at": "2026-11-10T21:12:52.300929+00:00",
+  "project": "VOIDCROWN_UNICO",
+  "install_note": "Desinstalar TODA app VOIDCROWN previa antes de instalar (conflicto de firma entre builds 71/72/tmp)"
 }
