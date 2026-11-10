@@ -1,12 +1,16 @@
 {
-  "tip": "71.0.0-UNICO",
-  "versionCode": 7100,
-  "package": "com.cisc.voidcrown.diazero",
-  "apk": "VOIDCROWN_71.0.0_UNICO.apk",
-  "sha256": "e672cdf14d3289be0749d171e3d0666622ea132ac4deb19c2df0bc0a51acf954",
-  "modes": [
+  "tip": "71.1.0-ORBITA",
+  "modules": [
     "risk",
-    "void_smash"
+    "void_smash",
+    "orbita_flotas",
+    "khaos_legacy"
   ],
-  "single_game": true
+  "orbit": {
+    "realtime_routes": true,
+    "travel_time": true,
+    "fuel_by_AU": true,
+    "campaign_history": true,
+    "csv_export": true
+  }
 }
