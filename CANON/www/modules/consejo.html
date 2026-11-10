@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>CONSEJO · VOIDCROWN</title>
+<script src="../js/commander_meta.js"></script>
+<style>
+:root{--bg:#05060c;--card:#0e1420;--gold:#ffc857;--cyan:#5ef2d0;--red:#ff4d3a;--muted:#8b93a8;--fg:#eef1ff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:radial-gradient(1000px 500px at 50% -20%,#1a1040,var(--bg));color:var(--fg);min-height:100dvh;padding:16px}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+h1{font-size:13px;letter-spacing:.28em;color:var(--gold)}
+.hud-title{font-size:18px;font-weight:800;margin-top:6px;text-shadow:0 0 24px rgba(255,200,87,.35)}
+.chip{background:rgba(255,200,87,.1);border:1px solid rgba(255,200,87,.35);padding:8px 12px;border-radius:12px;font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin:16px 0}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px;text-decoration:none;color:inherit;display:block;transition:.15s;min-height:120px}
+.card:hover,.card:active{border-color:var(--gold);transform:translateY(-2px)}
+.card .num{font-size:10px;letter-spacing:.2em;color:var(--cyan)}
+.card h2{font-size:15px;margin:8px 0 6px}
+.card p{font-size:11px;color:var(--muted);line-height:1.35}
+.panel{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px;margin-top:12px}
+.panel h3{font-size:11px;letter-spacing:.16em;color:var(--gold);margin-bottom:8px}
+.muted{color:var(--muted);font-size:12px;line-height:1.45}
+button{border:0;border-radius:12px;padding:10px 14px;font-weight:700;background:linear-gradient(180deg,#c9a227,#7a5a10);color:#1a1000;cursor:pointer;min-height:44px}
+button.ghost{background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--fg)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.mission{padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.06);margin-top:6px;font-size:12px}
+.mission.done{opacity:.5;text-decoration:line-through}
+.xpbar{height:8px;background:#0a0e16;border-radius:99px;overflow:hidden;margin-top:8px}
+.xpbar>i{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--gold));width:0%}
+.achieve{font-size:11px;color:var(--cyan);margin-top:4px}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>CONSEJO Ω</h1>
+    <div class="hud-title" id="cmdTitle">Comandante</div>
+    <div class="muted" id="cmdMeta">XP · rango · perks</div>
+    <div class="xpbar"><i id="xpBar"></i></div>
+  </div>
+  <div class="chip" id="chipCR">0 cr</div>
+</header>
+<div class="grid">
+  <a class="card" href="../index.html"><div class="num">01</div><h2>RISK · Día Zero</h2><p>42 territorios. Facciones. Fenómenos. El tablero que sangra.</p></a>
+  <a class="card" href="orbita_flotas.html"><div class="num">02</div><h2>ÓRBITA · Flotas</h2><p>Rutas en vivo, fuel, asaltos enemigos, Archivo de campañas.</p></a>
+  <a class="card" href="void_smash.html"><div class="num">03</div><h2>CASTIGO · Smash</h2><p>Proyectiles balísticos, fractura 3D, voxels y población.</p></a>
+  <a class="card" href="khaos_legacy.html"><div class="num">04</div><h2>KHAOS legacy</h2><p>Módulo Three de heridas antiguas.</p></a>
+  <a class="card" href="#misiones"><div class="num">05</div><h2>Misiones Director</h2><p>Genoma de encargos. XP y créditos.</p></a>
+  <a class="card" href="#logros"><div class="num">06</div><h2>Logros / Perks</h2><p>Títulos exclusivos. Poder permanente.</p></a>
+</div>
+<div class="panel" id="misiones">
+  <h3>MISIONES DEL DIRECTOR</h3>
+  <div id="missionList"></div>
+  <p class="muted" style="margin-top:8px">El Director no es un bot de home: es presión + recompensa. Completa en Órbita/SMASH/RISK y vuelve aquí.</p>
+</div>
+<div class="panel" id="logros">
+  <h3>LOGROS · STAND DEL COMANDANTE</h3>
+  <div id="achList"></div>
+</div>
+<div class="panel">
+  <h3>EXPORT HISTÓRICO → SHEETS</h3>
+  <p class="muted">Descarga CSV diario listo para <b>Archivo → Importar</b> en Google Sheets (o arrastra al Sheet plantilla). Auto-API completa necesita tu Web App URL (opcional abajo).</p>
+  <input id="hookUrl" placeholder="https://script.google.com/macros/s/…/exec (opcional)" style="width:100%;margin-top:8px;padding:10px;border-radius:10px;border:1px solid #333;background:#0a0e16;color:#eee"/>
+  <div class="row">
+    <button type="button" id="btnCSV">Exportar diario CSV</button>
+    <button type="button" class="ghost" id="btnHook">Enviar a Web App</button>
+  </div>
+  <p class="muted" id="exportMsg" style="margin-top:8px"></p>
+</div>
+<script>
+const M=window.VCMeta;
+function render(){
+  M.ensureMissions();
+  const s=M.load();
+  const ranks=M.RANKS;
+  const r=M.rankFor(s.xp);
+  const next=ranks[Math.min(ranks.length-1, ranks.findIndex(x=>x.id===r.id)+1)]||r;
+  const span=Math.max(1,(next.xp-r.xp));
+  const pct=Math.min(100, ((s.xp-r.xp)/span)*100);
+  document.getElementById('cmdTitle').textContent=s.title;
+  document.getElementById('cmdMeta').textContent=`${s.xp} XP · rango ${r.id} · siguiente ${next.title} (${next.xp})`;
+  document.getElementById('xpBar').style.width=pct+'%';
+  document.getElementById('chipCR').textContent=s.credits+' cr';
+  document.getElementById('missionList').innerHTML=(s.missions||[]).slice(-6).map(m=>
+    `<div class="mission ${m.done?'done':''}"><b>${m.name}</b> — ${m.desc}<br/><span class="muted">+${m.rewardXP} XP · +${m.rewardCR} cr ${m.done?'· HECHA':''}</span></div>`
+  ).join('')||'<div class="muted">Sin misiones</div>';
+  document.getElementById('achList').innerHTML=M.ACHIEVEMENTS.map(a=>{
+    const got=s.achievements[a.id];
+    return `<div class="achieve">${got?'◆':'◇'} <b>${a.name}</b> — ${a.desc}${got?` · <i>${a.title}</i>`:''}</div>`;
+  }).join('');
+}
+document.getElementById('btnCSV').onclick=()=>{
+  const {csv,filename}=M.exportDayCSV();
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download=filename; a.click();
+  document.getElementById('exportMsg').textContent='CSV listo: impórtalo a Google Sheets (Archivo → Importar → Subir).';
+};
+document.getElementById('btnHook').onclick=async()=>{
+  const url=document.getElementById('hookUrl').value.trim();
+  const {csv,meta}=M.exportDayCSV();
+  if(!url){document.getElementById('exportMsg').textContent='Pega la URL de tu Google Apps Script Web App.';return}
+  try{
+    await fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({csv,xp:meta.xp,title:meta.title,stats:meta.stats,day:new Date().toISOString().slice(0,10)})});
+    document.getElementById('exportMsg').textContent='Payload enviado (no-cors). Revisa la hoja si el script está desplegado.';
+  }catch(e){document.getElementById('exportMsg').textContent='Error: '+e.message}
+};
+render();
+</script>
+</body>
+</html>
