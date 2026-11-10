@@ -1,28 +1,32 @@
-# VOIDCROWN 71.0.0-UNICO — un solo juego
+# VOIDCROWN — LEE ESTO (CANON)
 
-**Tip:** este pack. Todo lo demás es archivo o ruido.
-
-## Qué se asimiló
-| Fuente | Lo mejor que se quedó |
-|---|---|
-| **v70 UNIFICADO** | Base RISK Día Zero, Viejo, KHAOS/FLACKO/ARCHIVO, audio, texturas |
-| **v67 void_smash** | Planeta Three.js, armas, narración lab |
-| **Diseño smash** | Voxels polares 18×36 + contador población |
-| **v69 Archivo** | Continuidad del Viejo (ya en 70) |
-
-## Rechazado a propósito
-- Cementerio multi-HTML de v67 (50+ entries)
-- MAGISTRAL 1GB
-- Ciscsino (casino → pack aparte `CISCSINO_REBORN`)
+**Actualizado:** 2026-11-10  
+**Tip de juego (ÚNICO):** `73.0.0-ABSORB-BEST`  
+**Quién manda:** este archivo.
 
 ## Instalar
-`INSTALAR_VOIDCROWN.apk` o `VOIDCROWN_71.0.0_UNICO.apk`  
-Firma: self-signed debug (desinstalá el 70 si choca package/firma).  
-SHA: ver `VOIDCROWN_71.0.0_UNICO.SHA256`
+1. Desinstala VOIDCROWN viejo si la firma choca.
+2. Instala `INSTALAR_VOIDCROWN.apk` (73.0.0).
+3. GitHub: release `v73.0.0-ABSORB-BEST`
 
-Botón **SMASH** en el HUD → laboratorio planetario.
+| Campo | Valor |
+|---|---|
+| package | com.cisc.voidcrown.diazero |
+| versionCode | 7300 |
+| Entry | Consejo → RISK / ÓRBITA / CASTIGO |
+| Arquitectura | spine global de mando |
 
-## Smoke
-1. Abre RISK (turno 1, mapa)
-2. SMASH → planeta 3D, toca, suben caídos
-3. ← RISK vuelve
+## Lo mejor absorbido
+| Versión | Qué se guardó |
+|---|---|
+| 70 | RISK 42, facciones, fenómenos, Viejo, SFX, texturas |
+| 71 | Política un solo juego + smash |
+| 72.1 | Consejo, flotas, troop bank, rangos, APK v2/v3 |
+| 26 OMEGA | 15 armas, multi-mundo, atm, mp3 Viejo, diary/MutationPatch |
+| 24.x | Iconos desastre (sin hub basura) |
+
+## Reglas agente
+1. Un tip. Mejoras in-place o N+1.
+2. Emitir eventos al spine, no contadores paralelos.
+3. Cada update: EDAI_MANIFEST con rollback.
+4. Ciscsino / LEGION hub = aparte.
