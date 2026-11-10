@@ -1,21 +1,34 @@
 {
   "name": "VOIDCROWN",
-  "version": "72.1.0-GLOBAL-COMMAND",
-  "versionCode": 7210,
+  "version": "73.0.0-ABSORB-BEST",
+  "versionCode": 7300,
   "package": "com.cisc.voidcrown.diazero",
   "entry": "modules/consejo.html",
   "architecture": "global-command-spine",
+  "absorbed_best_of": {
+    "v24.1.1": "iconos desastre, lecciones pack (no hub multiagente)",
+    "v26 OMEGA": "15 armas NAT/TECH/MEGA/DEF, atm, voxels philosophy, multi-mundo, mp3 Viejo, earth day/night/clouds, MutationPatch+diary",
+    "v67": "void smash lab three",
+    "v68": "earth 4k textures HQ (via v70 absorb)",
+    "v70": "RISK 42, facciones, fenómenos, Viejo, KHAOS, FLACKO, audio sfx, entry único",
+    "v71": "UNICO policy, smash module",
+    "v72.1": "spine global, consejo, órbita flotas, troop bank, ceremonias, APK v2/v3 installable"
+  },
+  "rejected": [
+    "multi-html cemetery",
+    "1GB v68 dump",
+    "ciscsino in apk",
+    "agent home"
+  ],
   "modes": [
     "consejo",
     "risk",
     "orbita",
-    "castigo",
+    "castigo_multi",
     "khaos"
   ],
   "spine": "js/voidcrown_global.js",
-  "single_progress": true,
-  "risk_orbit_sync": true,
-  "castigo_persistent_layers": true,
-  "rank_ceremonies": true,
-  "edai_manifest": "EDAI_MANIFEST_72.1.json"
+  "castigo_worlds": 6,
+  "castigo_weapons": 16,
+  "apk_sign": "v2+v3 stable keystore"
 }
