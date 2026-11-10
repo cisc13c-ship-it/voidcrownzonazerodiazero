@@ -3,288 +3,381 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
-<title>CASTIGO · Smash balístico · VOIDCROWN</title>
+<title>CASTIGO · Lab multi-mundo · VOIDCROWN 73</title>
 <script src="three.min.js"></script>
+<script src="../js/voidcrown_global.js"></script>
+<script src="../js/ceremony.js"></script>
 <script src="../js/commander_meta.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:#02040a;color:#e8eefc;font-family:system-ui,sans-serif;overflow:hidden}
 #c{position:fixed;inset:0;touch-action:none}
-.hud{position:fixed;left:0;right:0;top:0;z-index:5;padding:10px 12px;background:linear-gradient(180deg,rgba(0,0,0,.85),transparent);pointer-events:none}
-.hud *{pointer-events:auto}
-.hud h1{font-size:11px;letter-spacing:.22em;color:#ff4d3a}
-.title{font-size:14px;font-weight:800;color:#ffc857;margin-top:4px}
-.stats{position:fixed;top:64px;right:10px;z-index:5;width:150px;padding:10px;border-radius:12px;background:rgba(8,12,20,.88);border:1px solid rgba(255,77,58,.35);font-size:11px;line-height:1.45}
+.top{position:fixed;left:0;right:0;top:0;z-index:5;padding:8px 10px;background:linear-gradient(180deg,rgba(0,0,0,.9),transparent);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.top a{color:#5ef2d0;text-decoration:none;font-size:12px;padding:6px 10px;border:1px solid rgba(94,242,208,.3);border-radius:999px}
+.brand{font-size:10px;letter-spacing:.18em;color:#ff4d3a;font-weight:800}
+.title{font-size:13px;font-weight:800;color:#ffc857}
+.stats{position:fixed;top:56px;right:8px;z-index:5;width:min(160px,42vw);padding:10px;border-radius:12px;background:rgba(8,12,20,.9);border:1px solid rgba(255,77,58,.35);font-size:11px;line-height:1.45}
 .stats b{color:#5ef2d0}
-.bar{position:fixed;left:0;right:0;bottom:0;z-index:6;padding:10px 8px calc(10px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;gap:8px;justify-content:center;background:linear-gradient(0deg,rgba(0,0,0,.92),transparent)}
-button{border:1px solid rgba(255,77,58,.4);background:rgba(30,10,14,.92);color:#fff;border-radius:12px;padding:10px 12px;font-size:11px;font-weight:700;min-height:44px}
-button.on{box-shadow:0 0 0 2px #ffc857}
-button.ghost{border-color:rgba(94,242,208,.35);background:rgba(10,20,24,.9)}
-#edai{position:fixed;left:10px;bottom:100px;z-index:7;max-width:78%;padding:10px 12px;border-radius:14px;background:rgba(10,14,24,.92);border:1px solid rgba(177,140,255,.4);font-size:12px}
-#edai .who{font-size:10px;letter-spacing:.16em;color:#b18cff;margin-bottom:4px}
-a.back{color:#5ef2d0;text-decoration:none;font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid rgba(94,242,208,.3);background:rgba(0,0,0,.45)}
+.worlds{position:fixed;top:56px;left:8px;z-index:5;display:flex;flex-direction:column;gap:6px;max-height:40vh;overflow:auto}
+.worlds button{border:1px solid rgba(255,255,255,.12);background:rgba(10,14,24,.88);color:#eef;border-radius:10px;padding:8px 10px;font-size:11px;text-align:left;min-height:40px}
+.worlds button.on{border-color:#ffc857;box-shadow:0 0 0 1px #ffc857}
+#edai{position:fixed;left:8px;bottom:110px;z-index:7;max-width:78%;padding:10px 12px;border-radius:14px;background:rgba(10,14,24,.92);border:1px solid rgba(177,140,255,.4);font-size:12px}
+#edai .who{font-size:10px;letter-spacing:.14em;color:#b18cff}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:6;padding:8px 6px calc(8px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;gap:6px;justify-content:center;background:linear-gradient(0deg,rgba(0,0,0,.94),transparent);max-height:34vh;overflow:auto}
+button.w{border:1px solid rgba(255,77,58,.35);background:rgba(30,10,14,.9);color:#fff;border-radius:999px;padding:8px 10px;font-size:10px;font-weight:700;min-height:40px}
+button.w.on{box-shadow:0 0 0 2px #ffc857}
+button.w.nat{border-color:#7dd3fc55}button.w.tech{border-color:#fbbf2455}button.w.mega{border-color:#e879f955}button.w.def{border-color:#5eead455}
+button.ghost{border:1px solid rgba(94,242,208,.3);background:rgba(10,20,24,.9);color:#eef;border-radius:12px;padding:8px 12px;font-size:11px}
+.cat{width:100%;text-align:center;font-size:9px;letter-spacing:.2em;color:#8b93a8;margin-top:2px}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
-<div class="hud">
-  <a class="back" href="consejo.html">← Consejo</a>
-  <h1>CASTIGO · BALÍSTICA</h1>
-  <div class="title" id="cmdTitle">Comandante</div>
+<div class="top">
+  <a href="consejo.html">← Consejo</a>
+  <span class="brand">CASTIGO 73</span>
+  <span class="title" id="cmdTitle">Comandante</span>
+  <button class="ghost" type="button" id="btnSys">Sistema</button>
 </div>
+<div class="worlds" id="worldPick"></div>
 <div class="stats">
-  Integridad <b id="hp">100</b>%<br/>
+  Mundo <b id="wname">—</b><br/>
+  HP <b id="hp">100</b>% · Atm <b id="atm">100</b><br/>
   Corteza <b id="crust">100</b><br/>
   Manto <b id="mantle">100</b><br/>
   Núcleo <b id="coreHp">100</b><br/>
-  Vivos <b id="pop">812M</b><br/>
+  Vivos <b id="pop">—</b><br/>
   Caídos <b id="dead">0</b><br/>
-  Caos <b id="chaos">0</b><br/>
-  Munición <b id="ammo">∞</b>
+  Caos <b id="chaos">0</b> · Munición <b id="ammo">∞</b>
 </div>
-<div id="edai"><div class="who">EDAI · CASTIGO</div><div id="line">Elige arma. El proyectil vuela con física real antes del impacto.</div></div>
-<div class="bar">
-  <button type="button" class="on" data-w="kinetic">⚒ Martillo</button>
-  <button type="button" data-w="swarm">✴ Enjambre</button>
-  <button type="button" data-w="laser">✦ Láser</button>
-  <button type="button" data-w="meteor">☄ Lluvia</button>
-  <button type="button" data-w="rift">◎ Grieta</button>
-  <button type="button" data-w="bifurcate">✂ Bifurcador</button>
-  <button type="button" data-w="nova">◉ Nova</button>
-  <button type="button" class="ghost" data-w="reset">↺ Regen</button>
-  <button type="button" class="ghost" onclick="location.href='orbita_flotas.html'">Órbita</button>
-</div>
+<div id="edai"><div class="who">EDAI · CASTIGO ABSORB</div><div id="line">15 armas OMEGA + multi-mundo. El daño persiste en el spine.</div></div>
+<div class="bar" id="arsenal"></div>
 <script>
 (function(){
-const M=window.VCMeta; const meta=M.load();
-document.getElementById('cmdTitle').textContent=meta.title;
-const POP0=812e6;
-const KEY='vc-castigo-ballistic-v1';
-function load(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return{}}}
-function save(s){localStorage.setItem(KEY,JSON.stringify(s))}
+'use strict';
+/** CASTIGO 73 — lo mejor de OMEGA 26 (15 armas, capas, atm, multi-mundo) + balística 72 + spine global */
+const G=window.VCGlobal;
+const POP0={earth:812e6, mars:0, venus:0, ice:12e6, gas:0, lab:500e6};
 function fmt(n){if(n>=1e9)return(n/1e9).toFixed(2)+'B';if(n>=1e6)return(n/1e6).toFixed(1)+'M';return String(n|0)}
 function say(t){document.getElementById('line').textContent=t}
 
-let st=Object.assign({hp:100,crust:100,mantle:100,core:100,dead:0,chaos:0,ammo:12,weapon:'kinetic',bifurcated:false}, load());
-const RINGS=18, SECTORS=36;
-if(!st.voxels){st.voxels=[]; for(let r=0;r<RINGS;r++){const row=[];for(let s=0;s<SECTORS;s++)row.push(1);st.voxels.push(row)}}
+const WORLDS=[
+  {id:'earth', name:'Tierra', color:0x3a8f6e, pop:POP0.earth, tex:'../tex/earth_day.jpg'},
+  {id:'mars', name:'Marte', color:0xb85a3a, pop:0},
+  {id:'venus', name:'Venus', color:0xc9a86c, pop:0},
+  {id:'ice', name:'Mundo Hielo', color:0x9ad7e8, pop:POP0.ice},
+  {id:'gas', name:'Gigante Gas', color:0xd4a574, pop:0, scale:1.35},
+  {id:'lab', name:'Lab Void', color:0x6b5cff, pop:POP0.lab},
+];
+
+// OMEGA 26 arsenal (best of TOTAL 26)
+const WEAPONS=[
+  {id:'meteor',name:'ASTEROIDE',cat:'NAT',pow:14,pop:0.025,r:0.14,layer:'crust',color:0xfb923c,speed:3.2,mass:1.2,shake:0.12},
+  {id:'storm',name:'TORMENTA',cat:'NAT',pow:7,pop:0.012,r:0.22,layer:'crust',color:0x7dd3fc,speed:4,mass:0.4,shake:0.06},
+  {id:'tsunami',name:'TSUNAMI',cat:'NAT',pow:10,pop:0.04,r:0.2,layer:'crust',color:0x2dd4bf,speed:2.8,mass:0.8,shake:0.08},
+  {id:'quake',name:'SÍSMICO',cat:'NAT',pow:12,pop:0.03,r:0.25,layer:'mantle',color:0xa8a29e,speed:2.5,mass:1,shake:0.14},
+  {id:'laser',name:'LÁSER',cat:'TECH',pow:9,pop:0.006,r:0.05,layer:'pierce',color:0x38bdf8,speed:16,mass:0.1,shake:0.05,beam:true},
+  {id:'sat',name:'SATÉLITE',cat:'TECH',pow:11,pop:0.015,r:0.08,layer:'pierce',color:0x67e8f9,speed:5,mass:0.6,shake:0.07},
+  {id:'nuke',name:'NUCLEAR',cat:'TECH',pow:24,pop:0.09,r:0.18,layer:'crust',color:0xfbbf24,speed:3,mass:1.5,shake:0.2},
+  {id:'beam',name:'RAYO SOLAR',cat:'TECH',pow:15,pop:0.02,r:0.06,layer:'pierce',color:0xfde047,speed:12,mass:0.2,shake:0.08,beam:true},
+  {id:'colony',name:'COLONY DROP',cat:'TECH',pow:18,pop:0.05,r:0.11,layer:'crust',color:0xf97316,speed:2.6,mass:1.3,shake:0.15},
+  {id:'void',name:'VACÍO',cat:'MEGA',pow:16,pop:0.03,r:0.12,layer:'mantle',color:0xa78bfa,speed:2.2,mass:1.1,shake:0.12},
+  {id:'bh',name:'AGUJERO',cat:'MEGA',pow:40,pop:0.18,r:0.16,layer:'core',color:0xe879f9,speed:1.6,mass:2.2,shake:0.28},
+  {id:'monster',name:'MONSTRUO',cat:'MEGA',pow:20,pop:0.07,r:0.15,layer:'mantle',color:0xf43f5e,speed:2,mass:1.6,shake:0.16},
+  {id:'chain',name:'CADENA',cat:'MEGA',pow:13,pop:0.035,r:0.07,layer:'chain',color:0xfb7185,speed:3.5,mass:0.5,shake:0.1,count:4},
+  {id:'bifurcate',name:'BIFURCADOR',cat:'MEGA',pow:28,pop:0.1,r:0.2,layer:'core',color:0xffee88,speed:5,mass:1.2,shake:0.22,special:'split'},
+  {id:'shield',name:'ESCUDO',cat:'DEF',pow:-12,pop:0,r:0,layer:'heal',color:0x5eead4,speed:0,mass:0,shake:0},
+  {id:'heal',name:'RESTAURA',cat:'DEF',pow:-8,pop:0,r:0,layer:'heal',color:0x86efac,speed:0,mass:0,shake:0},
+];
+
+function ensureCastigo(){
+  if(!G) return null;
+  const s=G.load();
+  s.castigo=s.castigo||{worlds:{},active:'earth',ammo:20};
+  WORLDS.forEach(w=>{
+    if(!s.castigo.worlds[w.id]){
+      s.castigo.worlds[w.id]={crust:100,mantle:100,core:100,atm:100,dead:0,chaos:0,scars:[],history:[],bifurcated:false,voided:false};
+    }
+  });
+  if(!s.castigo.worlds[s.castigo.active]) s.castigo.active='earth';
+  G.save(s); return s;
+}
+
+let meta=ensureCastigo();
+let activeId=(meta&&meta.castigo.active)||'earth';
+let weaponId='meteor';
+let st=Object.assign({ammo:20}, (meta&&meta.castigo.worlds[activeId])||{});
+document.getElementById('cmdTitle').textContent=(meta?(meta.badge+' '+meta.title):'Comandante');
 
 const canvas=document.getElementById('c');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
 const scene=new THREE.Scene(); scene.background=new THREE.Color(0x02040a);
 const camera=new THREE.PerspectiveCamera(42,1,0.1,200);
-camera.position.set(0,0.2,3.4);
-const dl=new THREE.DirectionalLight(0xffffff,1.2); dl.position.set(4,2,5); scene.add(dl);
-scene.add(new THREE.AmbientLight(0x334466,0.5));
-scene.add(new THREE.HemisphereLight(0xff6b4a,0x110022,0.25));
+camera.position.set(0,0.15,3.5);
+scene.add(new THREE.AmbientLight(0x445566,0.55));
+const dl=new THREE.DirectionalLight(0xffffff,1.15); dl.position.set(4,2,5); scene.add(dl);
+// starfield
+(function(){
+  const g=new THREE.BufferGeometry();
+  const n=800, arr=new Float32Array(n*3);
+  for(let i=0;i<n*3;i++) arr[i]=(Math.random()-0.5)*40;
+  g.setAttribute('position', new THREE.BufferAttribute(arr,3));
+  scene.add(new THREE.Points(g, new THREE.PointsMaterial({color:0xffffff,size:0.02})));
+})();
 
 const loader=new THREE.TextureLoader();
-const day=loader.load('../tex/earth_day_hq.png');
-try{day.colorSpace=THREE.SRGBColorSpace}catch(e){}
-const planetGeo=new THREE.SphereGeometry(1,64,64);
-const planetMat=new THREE.MeshStandardMaterial({map:day,roughness:0.85,metalness:0.05,emissive:0x1a1520,emissiveIntensity:0.35});
-const planet=new THREE.Mesh(planetGeo, planetMat); scene.add(planet);
-// second half for bifurcate
-const halfMat=planetMat.clone();
-const halfA=new THREE.Mesh(new THREE.SphereGeometry(1,48,48,0,Math.PI), halfMat);
-const halfB=new THREE.Mesh(new THREE.SphereGeometry(1,48,48,Math.PI,Math.PI), halfMat.clone());
-halfA.visible=false; halfB.visible=false; scene.add(halfA); scene.add(halfB);
-
-const atmo=new THREE.Mesh(new THREE.SphereGeometry(1.08,32,32), new THREE.MeshBasicMaterial({color:0xff4d3a,transparent:true,opacity:0.06,side:THREE.BackSide}));
-scene.add(atmo);
-
-const projectiles=[]; // {mesh,vel,weapon,life}
-const debris=[]; // {mesh,vel,spin}
+let planet, halfA, halfB, atmoMesh;
 const scars=new THREE.Group(); scene.add(scars);
+const projectiles=[], debris=[];
 
-const WEAPONS={
-  kinetic:{name:'Martillo cinético', dmg:14, ammo:1, color:0xffaa44, speed:4.2, mass:1.4, shake:0.12},
-  swarm:{name:'Enjambre ×5', dmg:5, ammo:1, color:0x5ef2d0, speed:3.5, mass:0.5, shake:0.06, count:5},
-  laser:{name:'Láser de manto', dmg:9, ammo:0, color:0x55eef2, speed:18, mass:0.1, shake:0.05, beam:true},
-  meteor:{name:'Lluvia meteórica', dmg:7, ammo:1, color:0xff6622, speed:2.8, mass:1, shake:0.1, count:4},
-  rift:{name:'Grieta gravitacional', dmg:11, ammo:1, color:0x7b5cff, speed:2.2, mass:2, shake:0.14},
-  bifurcate:{name:'Rayo Bifurcador', dmg:28, ammo:1, color:0xffee88, speed:6, mass:1.2, shake:0.22, special:'split'},
-  nova:{name:'Nova de vacío', dmg:40, ammo:1, color:0xffffff, speed:1.5, mass:3, shake:0.3, special:'nova'},
-};
+function buildPlanet(wdef){
+  if(planet){ scene.remove(planet); planet.geometry.dispose(); }
+  if(halfA){ scene.remove(halfA); scene.remove(halfB); }
+  if(atmoMesh) scene.remove(atmoMesh);
+  while(scars.children.length) scars.remove(scars.children[0]);
+  const scale=wdef.scale||1;
+  const geo=new THREE.SphereGeometry(1*scale, 64, 64);
+  let mat;
+  if(wdef.tex){
+    try{
+      const tex=loader.load(wdef.tex);
+      try{tex.colorSpace=THREE.SRGBColorSpace}catch(e){}
+      mat=new THREE.MeshStandardMaterial({map:tex, color:0xffffff, roughness:0.85, metalness:0.05, emissive:wdef.color, emissiveIntensity:0.15});
+    }catch(e){
+      mat=new THREE.MeshStandardMaterial({color:wdef.color, roughness:0.8, emissive:wdef.color, emissiveIntensity:0.2});
+    }
+  } else {
+    mat=new THREE.MeshStandardMaterial({color:wdef.color, roughness:0.75, metalness:0.1, emissive:wdef.color, emissiveIntensity:0.25});
+  }
+  planet=new THREE.Mesh(geo, mat); scene.add(planet);
+  halfA=new THREE.Mesh(new THREE.SphereGeometry(1*scale,48,48,0,Math.PI), mat.clone());
+  halfB=new THREE.Mesh(new THREE.SphereGeometry(1*scale,48,48,Math.PI,Math.PI), mat.clone());
+  halfA.visible=false; halfB.visible=false; scene.add(halfA); scene.add(halfB);
+  atmoMesh=new THREE.Mesh(new THREE.SphereGeometry(1.08*scale,32,32), new THREE.MeshBasicMaterial({color:wdef.color,transparent:true,opacity:0.07,side:THREE.BackSide}));
+  scene.add(atmoMesh);
+  if(st.bifurcated){ planet.visible=false; halfA.visible=true; halfB.visible=true; }
+}
+
+function loadWorld(id){
+  activeId=id;
+  meta=ensureCastigo();
+  const g=G.load();
+  g.castigo.active=id; G.save(g);
+  st=Object.assign({ammo:g.castigo.ammo||20}, g.castigo.worlds[id]);
+  const wdef=WORLDS.find(w=>w.id===id);
+  buildPlanet(wdef);
+  document.querySelectorAll('#worldPick button').forEach(b=>b.classList.toggle('on', b.dataset.id===id));
+  say('Laboratorio: '+wdef.name+'. Daño acumulativo del spine.');
+  ui();
+}
 
 function ui(){
-  document.getElementById('hp').textContent=Math.max(0,st.hp|0);
+  const wdef=WORLDS.find(w=>w.id===activeId);
+  const hp=Math.round(((st.crust||0)+(st.mantle||0)+(st.core||0))/3);
+  document.getElementById('wname').textContent=wdef.name+(st.voided?' VOID':'');
+  document.getElementById('hp').textContent=Math.max(0,hp);
+  document.getElementById('atm').textContent=Math.max(0,st.atm|0);
   document.getElementById('crust').textContent=Math.max(0,st.crust|0);
   document.getElementById('mantle').textContent=Math.max(0,st.mantle|0);
   document.getElementById('coreHp').textContent=Math.max(0,st.core|0);
-  document.getElementById('pop').textContent=fmt(Math.max(0,POP0-st.dead));
-  document.getElementById('dead').textContent=fmt(st.dead);
+  const pop0=wdef.pop||0;
+  document.getElementById('pop').textContent=fmt(Math.max(0,pop0-(st.dead||0)));
+  document.getElementById('dead').textContent=fmt(st.dead||0);
   document.getElementById('chaos').textContent=st.chaos|0;
   document.getElementById('ammo').textContent=st.ammo;
-  save(st);
+  if(atmoMesh) atmoMesh.material.opacity=Math.max(0.01, 0.08*((st.atm||0)/100));
 }
-function shake(mag){
-  camera.userData.shake=Math.max(camera.userData.shake||0, mag);
+
+function persistWorld(){
+  if(!G) return;
+  const g=G.load();
+  g.castigo.worlds[activeId]=Object.assign({}, st);
+  g.castigo.ammo=st.ammo;
+  g.castigo.active=activeId;
+  G.save(g);
+}
+
+function applyOmegaDamage(w, mult){
+  // OMEGA layer rules + spine event
+  const pow=Math.abs(w.pow)*(mult||1)*(G&&G.load().perks.smash_dmg?1.15:1);
+  if(w.layer==='heal'){
+    st.crust=Math.min(100,(st.crust||0)+Math.abs(w.pow));
+    st.mantle=Math.min(100,(st.mantle||0)+4);
+    st.atm=Math.min(100,(st.atm||0)+3);
+    if(G){ G.diary('Defensa '+w.name+' en '+activeId); G.applyMutationPatch({type:'heal',target:activeId,reason:w.name}); }
+    return;
+  }
+  let left=pow;
+  const eat=(k,ratio)=>{const t=Math.min(st[k]||0, left*ratio); st[k]=Math.max(0, +(st[k]-t).toFixed(2)); left-=t;};
+  if(w.layer==='crust'){ eat('crust',1); if(left>0) eat('mantle',0.5); }
+  else if(w.layer==='mantle'){ eat('mantle',1); eat('crust',0.3); if(left>0) eat('core',0.4); }
+  else if(w.layer==='core'||w.layer==='pierce'){ eat('crust',0.35); eat('mantle',0.35); eat('core',0.5); }
+  else if(w.layer==='chain'){ eat('crust',0.6); eat('mantle',0.4); }
+  else { eat('crust',0.5); eat('mantle',0.3); eat('core',0.2); }
+  if(w.id==='void'||w.id==='bh') st.atm=Math.max(0,(st.atm||0)-(w.id==='bh'?18:10));
+  if(w.id==='storm'||w.id==='tsunami') st.atm=Math.max(0,(st.atm||0)-3);
+  const pop0=WORLDS.find(x=>x.id===activeId).pop||0;
+  st.dead=Math.min(pop0, (st.dead||0)+Math.floor(pop0*(w.pop||0)*(0.6+Math.random()*0.8)));
+  st.chaos=(st.chaos||0)+Math.ceil(Math.abs(w.pow)/3);
+  st.history=st.history||[]; st.history.push({t:Date.now(),weapon:w.id,pow}); st.history=st.history.slice(-80);
+  if(G){
+    G.emit('CASTIGO_IMPACT',{weapon:w.id,dmg:Math.abs(w.pow),world:activeId,msg:w.name+'→'+activeId,bifurcate:w.special==='split'});
+    // sync layers from our st after emit may overwrite — force our calculated
+    const g=G.load();
+    g.castigo.worlds[activeId]=Object.assign(g.castigo.worlds[activeId]||{}, {
+      crust:st.crust,mantle:st.mantle,core:st.core,atm:st.atm,dead:st.dead,chaos:st.chaos,history:st.history,bifurcated:st.bifurcated,voided:st.voided
+    });
+    G.save(g);
+  }
+  const hp=(st.crust+st.mantle+st.core)/3;
+  if(hp<=0.5){ st.voided=true; st.crust=st.mantle=st.core=0; if(G){ G.bumpStat?null:0; G.emit('CASTIGO_VOID',{world:activeId,msg:'VOID '+activeId}); G.diary('VOID '+activeId); } say('VOID. '+WORLDS.find(x=>x.id===activeId).name+' es herida.'); }
+}
+
+// chain reaction to neighbors if voided
+function cascadeIfVoid(){
+  if(!st.voided) return;
+  const order=WORLDS.map(w=>w.id);
+  const i=order.indexOf(activeId);
+  [order[i-1], order[i+1]].filter(Boolean).forEach(nid=>{
+    const g=G.load();
+    const o=g.castigo.worlds[nid]; if(!o||o.voided) return;
+    o.crust=Math.max(0,o.crust-12); o.mantle=Math.max(0,o.mantle-8); o.chaos=(o.chaos||0)+5;
+    g.castigo.worlds[nid]=o; G.save(g);
+    say('Reacción en cadena daña '+nid);
+  });
 }
 
 function spawnDebris(point, normal, n, color){
   for(let i=0;i<n;i++){
-    const m=new THREE.Mesh(
-      new THREE.TetrahedronGeometry(0.04+Math.random()*0.06,0),
-      new THREE.MeshStandardMaterial({color:color||0x886655, roughness:0.9})
-    );
+    const m=new THREE.Mesh(new THREE.TetrahedronGeometry(0.04+Math.random()*0.07,0), new THREE.MeshStandardMaterial({color:color||0x886655,roughness:0.9}));
     m.position.copy(point);
-    const dir=normal.clone().add(new THREE.Vector3(Math.random()-0.5,Math.random()-0.5,Math.random()-0.5).multiplyScalar(0.8)).normalize();
-    debris.push({mesh:m, vel:dir.multiplyScalar(0.8+Math.random()*1.4), spin:new THREE.Vector3(Math.random(),Math.random(),Math.random())});
+    const dir=normal.clone().add(new THREE.Vector3(Math.random()-0.5,Math.random()-0.5,Math.random()-0.5).multiplyScalar(0.9)).normalize();
+    debris.push({mesh:m, vel:dir.multiplyScalar(0.7+Math.random()*1.5), spin:new THREE.Vector3(Math.random(),Math.random(),Math.random())});
     scene.add(m);
   }
 }
 
-function applyLayers(dmg){
-  const mult=M.smashDmgMult();
-  dmg*=mult;
-  let left=dmg;
-  const take=(key,ratio)=>{const t=Math.min(st[key], left*ratio); st[key]=Math.max(0,st[key]-t); left-=t};
-  take('crust',1); if(left>0) take('mantle',1); if(left>0) take('core',1);
-  st.hp=Math.round((st.crust+st.mantle+st.core)/3);
-  st.dead=Math.min(POP0, st.dead+Math.floor(dmg*densPop()*90000));
-  st.chaos+=Math.ceil(dmg/3);
-  if(st.hp<=0){ st.hp=0; say('VOID. El mundo es herida.'); M.bumpStat('worldsVoided',1); M.addXP(60,'Mundo en VOID'); M.addCredits(50,'Castigo'); }
-}
-
-function densPop(){return 0.7+Math.random()*0.5}
-
-function impact(point, normal, weapon){
-  const w=WEAPONS[weapon];
-  applyLayers(w.dmg*(0.85+Math.random()*0.3));
-  shake(w.shake);
-  planet.material.emissiveIntensity=0.9;
-  setTimeout(()=>{planet.material.emissiveIntensity=0.35},200);
-  spawnDebris(point, normal, 8+Math.floor(w.dmg/2), w.color);
-  const scar=new THREE.Mesh(new THREE.SphereGeometry(0.05+w.dmg*0.004,8,8), new THREE.MeshBasicMaterial({color:w.color,transparent:true,opacity:0.85}));
-  scar.position.copy(normal.clone().multiplyScalar(1.01));
+function impact(point, normal, wid){
+  const w=WEAPONS.find(x=>x.id===wid)||WEAPONS[0];
+  if(w.layer==='heal'){ applyOmegaDamage(w,1); say(w.name+' refuerza el mundo.'); ui(); persistWorld(); return; }
+  applyOmegaDamage(w, 0.85+Math.random()*0.3);
+  camera.userData.shake=Math.max(camera.userData.shake||0, w.shake||0.08);
+  if(planet&&planet.material){ planet.material.emissiveIntensity=0.8; setTimeout(()=>{if(planet)planet.material.emissiveIntensity=0.2},180); }
+  spawnDebris(point, normal, 6+Math.floor(Math.abs(w.pow)/3), w.color);
+  const scar=new THREE.Mesh(new THREE.SphereGeometry(0.04+Math.abs(w.pow)*0.003,8,8), new THREE.MeshBasicMaterial({color:w.color,transparent:true,opacity:0.85}));
+  scar.position.copy(normal.clone().multiplyScalar(1.02*(WORLDS.find(x=>x.id===activeId).scale||1)));
   scars.add(scar);
-  // voxel hit
-  const n=normal.clone().normalize();
-  const ring=Math.min(RINGS-1,Math.max(0,Math.floor((0.5-Math.asin(Math.max(-1,Math.min(1,n.y)))/Math.PI)*RINGS)));
-  const sector=Math.min(SECTORS-1,Math.max(0,Math.floor(((Math.atan2(n.x,n.z)+Math.PI)/(Math.PI*2))*SECTORS)));
-  st.voxels[ring][sector]=Math.max(0, st.voxels[ring][sector]-0.5);
-  if(w.special==='split' && !st.bifurcated && st.hp<70){
+  if(w.special==='split' && !st.bifurcated && (st.crust+st.mantle+st.core)<180){
     st.bifurcated=true; planet.visible=false; halfA.visible=true; halfB.visible=true;
-    halfA.position.set(-0.15,0,0); halfB.position.set(0.15,0,0);
-    say('Rayo Bifurcador: el planeta se parte en dos mitades.');
-    spawnDebris(point, normal, 30, 0xffee88);
+    say('Bifurcador: el mundo se parte.');
   }
-  if(w.special==='nova'){
-    st.crust=0; st.mantle=Math.max(0,st.mantle-40); applyLayers(5);
-    say('Nova de vacío: atmósfera y corteza diezmadas.');
-  }
-  if(st.hp<50){ try{const s=M.load(); /* mission smash_50 */ 
-    (s.missions||[]).forEach(m=>{if(m.check==='smash_50'&&!m.done){m.done=true;M.addXP(m.rewardXP,m.name);M.addCredits(m.rewardCR,m.name);M.bumpStat('missionsDone',1)}});
-  }catch(e){} }
-  say(`${w.name} impacta · HP ${st.hp} · caos ${st.chaos}`);
-  ui();
+  cascadeIfVoid();
+  say(w.name+' impacta · HP '+Math.round((st.crust+st.mantle+st.core)/3));
+  ui(); persistWorld();
 }
 
-function fireToward(targetPoint){
-  const w=WEAPONS[st.weapon];
+function fireToward(target){
+  const w=WEAPONS.find(x=>x.id===weaponId);
   if(!w) return;
-  if(w.ammo && st.ammo<=0){say('Sin munición especial');return}
-  if(w.ammo) st.ammo--;
+  if(w.layer==='heal'){ impact(new THREE.Vector3(0,1,0), new THREE.Vector3(0,1,0), w.id); return; }
+  if(w.pow>0 && st.ammo<=0 && !['laser','beam','storm'].includes(w.id)){ say('Sin munición especial'); return; }
+  if(w.pow>12) st.ammo=Math.max(0,st.ammo-1);
   const count=w.count||1;
   for(let i=0;i<count;i++){
-    const start=camera.position.clone().add(new THREE.Vector3((Math.random()-0.5)*0.3,(Math.random()-0.5)*0.2,-0.2));
-    const aim=targetPoint.clone().add(new THREE.Vector3((Math.random()-0.5)*0.15*(count>1),(Math.random()-0.5)*0.15*(count>1),(Math.random()-0.5)*0.15*(count>1)));
+    const start=camera.position.clone().add(new THREE.Vector3((Math.random()-0.5)*0.25,(Math.random()-0.5)*0.2,-0.15));
+    const aim=target.clone().add(new THREE.Vector3((Math.random()-0.5)*0.12*count,(Math.random()-0.5)*0.12*count,(Math.random()-0.5)*0.12*count));
     const dir=aim.clone().sub(start).normalize();
-    const mesh=new THREE.Mesh(
-      w.beam? new THREE.CapsuleGeometry(0.02,0.25,4,8): new THREE.SphereGeometry(0.05+w.mass*0.02,10,10),
-      new THREE.MeshBasicMaterial({color:w.color})
-    );
-    mesh.position.copy(start);
-    scene.add(mesh);
-    projectiles.push({mesh, vel:dir.multiplyScalar(w.speed), weapon:st.weapon, life:4, trail:w.beam});
+    const mesh=new THREE.Mesh(w.beam?new THREE.CapsuleGeometry(0.02,0.28,4,8):new THREE.SphereGeometry(0.045+w.mass*0.02,10,10), new THREE.MeshBasicMaterial({color:w.color}));
+    mesh.position.copy(start); scene.add(mesh);
+    projectiles.push({mesh, vel:dir.multiplyScalar(w.speed), weapon:w.id, life:5});
   }
-  say(`${w.name} en vuelo…`);
-  ui();
+  say(w.name+' en trayectoria…'); ui(); persistWorld();
 }
 
+// UI arsenal
+const ar=document.getElementById('arsenal');
+['NAT','TECH','MEGA','DEF'].forEach(cat=>{
+  const lab=document.createElement('div'); lab.className='cat'; lab.textContent=cat; ar.appendChild(lab);
+  WEAPONS.filter(w=>w.cat===cat).forEach(w=>{
+    const b=document.createElement('button'); b.type='button'; b.className='w '+cat.toLowerCase()+(w.id===weaponId?' on':'');
+    b.textContent=w.name; b.dataset.id=w.id;
+    b.onclick=()=>{ weaponId=w.id; document.querySelectorAll('button.w').forEach(x=>x.classList.toggle('on',x.dataset.id===w.id)); say(w.name+': '+(w.desc||w.layer)); };
+    ar.appendChild(b);
+  });
+});
+const reset=document.createElement('button'); reset.className='ghost'; reset.textContent='↺ Regen mundo'; reset.onclick=()=>{
+  st={crust:100,mantle:100,core:100,atm:100,dead:0,chaos:0,scars:[],history:[],bifurcated:false,voided:false,ammo:20};
+  planet.visible=true; halfA.visible=false; halfB.visible=false;
+  while(scars.children.length) scars.remove(scars.children[0]);
+  persistWorld(); ui(); say('Mundo regenerado en lab.');
+};
+ar.appendChild(reset);
+const back=document.createElement('button'); back.className='ghost'; back.textContent='Órbita'; back.onclick=()=>location.href='orbita_flotas.html';
+ar.appendChild(back);
+
+// world pick
+const wp=document.getElementById('worldPick');
+WORLDS.forEach(w=>{
+  const b=document.createElement('button'); b.type='button'; b.dataset.id=w.id; b.textContent=w.name;
+  b.onclick=()=>loadWorld(w.id); wp.appendChild(b);
+});
+
+document.getElementById('btnSys').onclick=()=>{
+  // quick cycle next damaged-looking tip
+  const ids=WORLDS.map(w=>w.id); const i=ids.indexOf(activeId); loadWorld(ids[(i+1)%ids.length]);
+};
+
 const ray=new THREE.Raycaster(); const mouse=new THREE.Vector2();
-let dragging=false, lx=0, ly=0, moved=0;
+let dragging=false,lx=0,ly=0,moved=0;
 canvas.addEventListener('pointerdown',e=>{dragging=true;lx=e.clientX;ly=e.clientY;moved=0;canvas.setPointerCapture(e.pointerId)});
 canvas.addEventListener('pointermove',e=>{
-  if(!dragging)return; const dx=e.clientX-lx, dy=e.clientY-ly; moved+=Math.abs(dx)+Math.abs(dy);
+  if(!dragging||!planet)return; const dx=e.clientX-lx,dy=e.clientY-ly; moved+=Math.abs(dx)+Math.abs(dy);
   planet.rotation.y+=dx*0.005; planet.rotation.x=Math.max(-0.9,Math.min(0.9,planet.rotation.x+dy*0.003));
-  halfA.rotation.copy(planet.rotation); halfB.rotation.copy(planet.rotation);
+  if(halfA){halfA.rotation.copy(planet.rotation); halfB.rotation.copy(planet.rotation);}
   lx=e.clientX; ly=e.clientY;
 });
 canvas.addEventListener('pointerup',e=>{
-  dragging=false;
-  if(moved>12) return;
+  dragging=false; if(moved>12||!planet) return;
   const r=canvas.getBoundingClientRect();
-  mouse.x=((e.clientX-r.left)/r.width)*2-1;
-  mouse.y=-((e.clientY-r.top)/r.height)*2+1;
+  mouse.x=((e.clientX-r.left)/r.width)*2-1; mouse.y=-((e.clientY-r.top)/r.height)*2+1;
   ray.setFromCamera(mouse,camera);
   const hits=ray.intersectObject(planet.visible?planet:halfA);
   if(hits[0]) fireToward(hits[0].point);
 });
 
-document.querySelectorAll('[data-w]').forEach(b=>{
-  b.onclick=()=>{
-    const w=b.getAttribute('data-w');
-    if(w==='reset'){
-      st={hp:100,crust:100,mantle:100,core:100,dead:0,chaos:0,ammo:12,weapon:'kinetic',bifurcated:false,voxels:st.voxels.map(r=>r.map(()=>1))};
-      planet.visible=true; halfA.visible=false; halfB.visible=false;
-      while(scars.children.length) scars.remove(scars.children[0]);
-      debris.splice(0).forEach(d=>scene.remove(d.mesh));
-      say('Mundo regenerado en el laboratorio.');
-      ui(); return;
-    }
-    st.weapon=w; document.querySelectorAll('[data-w]').forEach(x=>x.classList.remove('on')); b.classList.add('on');
-    say(WEAPONS[w].name+' listo. Toca el planeta para trazar trayectoria.');
-  };
-});
-
 function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
-addEventListener('resize',resize); resize(); ui();
-say('7 armas. Física de proyectil. Fractura y escombros. Título: '+meta.title);
+addEventListener('resize',resize); resize();
+loadWorld(activeId);
 
 const clock=new THREE.Clock();
 (function loop(){
   requestAnimationFrame(loop);
-  const dt=Math.min(0.05, clock.getDelta());
-  // projectiles physics
+  const dt=Math.min(0.05,clock.getDelta());
+  const scale=(WORLDS.find(w=>w.id===activeId).scale||1);
   for(let i=projectiles.length-1;i>=0;i--){
     const p=projectiles[i];
-    // gravity toward planet center (soft)
-    const toC=p.mesh.position.clone().multiplyScalar(-1).normalize().multiplyScalar(1.2*dt);
-    p.vel.add(toC);
-    p.mesh.position.add(p.vel.clone().multiplyScalar(dt));
-    p.life-=dt;
-    // hit test sphere r=1
-    if(p.mesh.position.length()<=1.02){
+    const toC=p.mesh.position.clone().multiplyScalar(-1).normalize().multiplyScalar(1.15*dt);
+    p.vel.add(toC); p.mesh.position.add(p.vel.clone().multiplyScalar(dt)); p.life-=dt;
+    if(p.mesh.position.length()<=1.02*scale){
       const n=p.mesh.position.clone().normalize();
-      impact(n.clone().multiplyScalar(1.01), n, p.weapon);
+      impact(n.clone().multiplyScalar(1.01*scale), n, p.weapon);
       scene.remove(p.mesh); projectiles.splice(i,1); continue;
     }
-    if(p.life<=0||p.mesh.position.length()>20){scene.remove(p.mesh);projectiles.splice(i,1)}
+    if(p.life<=0||p.mesh.position.length()>25){scene.remove(p.mesh);projectiles.splice(i,1)}
   }
-  // debris
   for(let i=debris.length-1;i>=0;i--){
-    const d=debris[i];
-    d.vel.y-=0.15*dt;
-    d.mesh.position.add(d.vel.clone().multiplyScalar(dt));
-    d.mesh.rotation.x+=d.spin.x*dt; d.mesh.rotation.y+=d.spin.y*dt;
-    d.vel.multiplyScalar(0.995);
-    if(d.mesh.position.length()>8){scene.remove(d.mesh);debris.splice(i,1)}
+    const d=debris[i]; d.vel.y-=0.12*dt; d.mesh.position.add(d.vel.clone().multiplyScalar(dt));
+    d.mesh.rotation.x+=d.spin.x*dt; d.vel.multiplyScalar(0.995);
+    if(d.mesh.position.length()>9){scene.remove(d.mesh);debris.splice(i,1)}
   }
-  if(st.bifurcated){
-    halfA.position.x-=0.03*dt; halfB.position.x+=0.03*dt;
-    halfA.rotation.y+=0.05*dt; halfB.rotation.y-=0.05*dt;
-  } else {
-    planet.rotation.y+=0.05*dt;
-  }
-  // camera shake
+  if(st.bifurcated&&halfA){ halfA.position.x-=0.025*dt; halfB.position.x+=0.025*dt; halfA.rotation.y+=0.04*dt; halfB.rotation.y-=0.04*dt; }
+  else if(planet) planet.rotation.y+=0.04*dt;
   if(camera.userData.shake>0){
     camera.position.x=(Math.random()-0.5)*camera.userData.shake;
-    camera.position.y=0.2+(Math.random()-0.5)*camera.userData.shake;
+    camera.position.y=0.15+(Math.random()-0.5)*camera.userData.shake;
     camera.userData.shake*=0.9;
-    if(camera.userData.shake<0.002){camera.userData.shake=0;camera.position.x=0;camera.position.y=0.2}
+    if(camera.userData.shake<0.002){camera.userData.shake=0;camera.position.x=0;camera.position.y=0.15}
   }
   renderer.render(scene,camera);
 })();
