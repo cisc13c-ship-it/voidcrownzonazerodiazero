@@ -1,0 +1,23 @@
+{
+  "id": "EDAI-2026-11-10-73.0-ABSORB-BEST",
+  "version": "73.0.0-ABSORB-BEST",
+  "change": "Absorber lo mejor de v24–v72: arsenal OMEGA 15+1, multi-mundo Castigo, audio Viejo, MutationPatch/diary, spine 72, firma instalable",
+  "deps": [
+    "voidcrown_global.js",
+    "ceremony.js",
+    "void_smash.html",
+    "orbita_flotas.html",
+    "consejo.html",
+    "index.html",
+    "cine/viejo/*.mp3"
+  ],
+  "tests": [
+    "Consejo abre y muestra XP/bank",
+    "Castigo: 6 mundos, 15+ armas, daño persiste al recargar",
+    "Órbita asalto → bank → RISK placeLeft",
+    "Audio Viejo en primer tap RISK",
+    "APK zipalign+v2/v3 verify"
+  ],
+  "rollback": "localStorage.removeItem('vc-global-command-v1'); reinstalar 72.1.1",
+  "at": "2026-11-10T09:12:44.998634+00:00"
+}
