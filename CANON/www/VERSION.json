@@ -1,0 +1,26 @@
+{
+  "name": "VOIDCROWN",
+  "version": "72.0.0-JOJO-CONSEJO",
+  "versionCode": 7200,
+  "package": "com.cisc.voidcrown.diazero",
+  "entry": "modules/consejo.html",
+  "modes": [
+    "consejo",
+    "risk_dia_zero",
+    "orbita_flotas",
+    "void_smash_castigo",
+    "khaos_legacy"
+  ],
+  "features": {
+    "commander_ranks_xp": true,
+    "achievements_perks": true,
+    "director_missions": true,
+    "tactical_global_panel": true,
+    "enemy_faction_fleets": true,
+    "ballistic_castigo_7_weapons": true,
+    "layers_crust_mantle_core": true,
+    "csv_and_sheets_webhook": true,
+    "campaign_archive": true
+  },
+  "creative": "JoJo-grade titles \u00b7 menacing HUD \u00b7 monstruo unificado"
+}
