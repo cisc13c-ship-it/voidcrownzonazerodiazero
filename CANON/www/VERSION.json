@@ -1,47 +1,32 @@
 {
   "name": "VOIDCROWN",
-  "version": "73.2.1-FIX-CONFLICT",
-  "versionCode": 7321,
+  "version": "74.0.0-EVOLVE-X100",
+  "versionCode": 7400,
   "package": "com.cisc.voidcrown.diazero",
   "entry": "modules/teatro_brutal.html",
-  "architecture": "global-command-spine",
-  "absorbed_best_of": {
-    "v24.1.1": "iconos desastre, lecciones pack (no hub multiagente)",
-    "v26 OMEGA": "15 armas NAT/TECH/MEGA/DEF, atm, voxels philosophy, multi-mundo, mp3 Viejo, earth day/night/clouds, MutationPatch+diary",
-    "v67": "void smash lab three",
-    "v68": "earth 4k textures HQ (via v70 absorb)",
-    "v70": "RISK 42, facciones, fenómenos, Viejo, KHAOS, FLACKO, audio sfx, entry único",
-    "v71": "UNICO policy, smash module",
-    "v72.1": "spine global, consejo, órbita flotas, troop bank, ceremonias, APK v2/v3 installable",
-    "12.5.0-BRUTAL": "Teatro apertura Drive, capas, VMira, grieta, suelo, legión autopilot guard",
-    "drive_docs": "Ideologia, Genoma P0, Project Lead, OMEGA evolve, SEPARACION wifi"
+  "architecture": "global-command-spine + EDAI-X100",
+  "project": "VOIDCROWN_UNICO",
+  "evolve": {
+    "cycles": 100,
+    "muts_per_cycle": 10,
+    "total": 1000
   },
-  "rejected": [
-    "multi-html cemetery",
-    "1GB v68 dump",
-    "ciscsino in apk",
-    "agent home"
-  ],
+  "qa": "tests/QA_REPORT_74.json",
   "modes": [
+    "teatro",
     "consejo",
     "risk",
     "orbita",
     "castigo_multi",
+    "director",
+    "archivo_vivo",
     "khaos"
   ],
   "spine": "js/voidcrown_global.js",
-  "castigo_worlds": 6,
-  "castigo_weapons": 16,
   "apk_sign": "v2+v3 stable keystore",
-  "drive_world": "12.5.0-BRUTAL",
-  "layers": [
-    "mundo",
-    "estrato",
-    "legion",
-    "marcos"
-  ],
-  "note": "14.0 sigue en archivo histórico; no es tip paralelo. Skill relevo desactualizado vs LEE_ESTO.",
-  "compiled_at": "2026-11-10T21:12:52.300929+00:00",
-  "project": "VOIDCROWN_UNICO",
-  "install_note": "Desinstalar TODA app VOIDCROWN previa antes de instalar (conflicto de firma entre builds 71/72/tmp)"
+  "compiled_at": "2026-11-12T01:32:41.906904+00:00",
+  "absorbed_best_of": {
+    "all_prior": "24→73 absorb + 12.5 layers + evolve 1000 mut catalog",
+    "74": "EDAI 100 cycles, QA 4 boxes, Archivo, Director, enemy fleets, pop/layers castigo"
+  }
 }
