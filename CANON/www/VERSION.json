@@ -1,32 +1,29 @@
 {
   "name": "VOIDCROWN",
-  "version": "74.0.0-EVOLVE-X100",
-  "versionCode": 7400,
+  "version": "75.0.0-EVOLVE-X200",
+  "versionCode": 7500,
   "package": "com.cisc.voidcrown.diazero",
   "entry": "modules/teatro_brutal.html",
-  "architecture": "global-command-spine + EDAI-X100",
   "project": "VOIDCROWN_UNICO",
   "evolve": {
-    "cycles": 100,
-    "muts_per_cycle": 10,
-    "total": 1000
+    "wave1_muts": 1000,
+    "wave2_muts": 1000,
+    "grand_total": 2000
   },
-  "qa": "tests/QA_REPORT_74.json",
+  "qa": "tests/QA_REPORT_75.json",
   "modes": [
     "teatro",
     "consejo",
     "risk",
     "orbita",
-    "castigo_multi",
+    "castigo",
     "director",
-    "archivo_vivo",
-    "khaos"
+    "archivo",
+    "dados_zero",
+    "slots",
+    "khaos_lab"
   ],
   "spine": "js/voidcrown_global.js",
-  "apk_sign": "v2+v3 stable keystore",
-  "compiled_at": "2026-11-12T01:32:41.906904+00:00",
-  "absorbed_best_of": {
-    "all_prior": "24→73 absorb + 12.5 layers + evolve 1000 mut catalog",
-    "74": "EDAI 100 cycles, QA 4 boxes, Archivo, Director, enemy fleets, pop/layers castigo"
-  }
+  "apk_sign": "v2+v3 stable",
+  "compiled_at": "2026-11-12T23:40:16.794627+00:00"
 }
