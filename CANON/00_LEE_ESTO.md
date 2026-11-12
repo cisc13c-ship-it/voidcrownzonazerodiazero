@@ -1,19 +1,12 @@
-# VOIDCROWN 73.2.1 FIX-CONFLICT
+# VOIDCROWN 74.0.0-EVOLVE-X100
 
-**Un solo APK:** INSTALAR_VOIDCROWN.apk  
-**package:** com.cisc.voidcrown.diazero · versionCode **7321**
+Un solo proyecto. 100 ciclos EDAI × 10 mutaciones = 1000 unidades.
 
-## Si hay conflicto al instalar
+## Módulos
+- Teatro 12.5 BRUTAL (entry)
+- Consejo · RISK · Órbita (flotas rivales) · Castigo (población+capas)
+- Director (misiones) · Archivo Vivo + QA
 
-```
-adb uninstall com.cisc.voidcrown.diazero
-adb uninstall com.voidcrown.edai181
-adb uninstall com.voidcrown.continuum
-adb uninstall com.cisc.legion.sistemas.caoticos
-adb install -r INSTALAR_VOIDCROWN.apk
-```
-
-En el teléfono: Ajustes → Apps → busca VOIDCROWN / Legion / Día Zero → Desinstalar → luego instala este APK.
-
-Causa típica: firmas distintas entre 71 / 72 / 73.1-tmp / 73.2.
-Este build usa **keystore estable** (SHA256 cert 4045f43e…).
+## Instalar
+INSTALAR_VOIDCROWN.apk · package com.cisc.voidcrown.diazero · versionCode 7400
+Si conflicto de firma: desinstalar app previa primero.
