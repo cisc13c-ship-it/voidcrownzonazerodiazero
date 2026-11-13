@@ -1,29 +1,12 @@
 {
   "name": "VOIDCROWN",
-  "version": "75.0.0-EVOLVE-X200",
-  "versionCode": 7500,
+  "version": "76.3.0-EVO-LELO",
+  "versionCode": 7630,
   "package": "com.cisc.voidcrown.diazero",
-  "entry": "modules/teatro_brutal.html",
-  "project": "VOIDCROWN_UNICO",
-  "evolve": {
-    "wave1_muts": 1000,
-    "wave2_muts": 1000,
-    "grand_total": 2000
-  },
-  "qa": "tests/QA_REPORT_75.json",
-  "modes": [
-    "teatro",
-    "consejo",
-    "risk",
-    "orbita",
-    "castigo",
-    "director",
-    "archivo",
-    "dados_zero",
-    "slots",
-    "khaos_lab"
-  ],
-  "spine": "js/voidcrown_global.js",
-  "apk_sign": "v2+v3 stable",
-  "compiled_at": "2026-11-12T23:40:16.794627+00:00"
+  "entry": "open.html",
+  "lelo": {"panel": "modules/evolucion_lelo.html"},
+  "auto": true,
+  "visual_pack_mb": 107.7,
+  "github_apk": "https://github.com/cisc13c-ship-it/voidcrownzonazerodiazero/releases/download/v76.3.0-EVO-LELO/INSTALAR_VOIDCROWN.apk",
+  "sha256": "6e7e951b3c73dc72655ac3afe607a970553e9a9465f1a60b3a3a7f878417ae87"
 }

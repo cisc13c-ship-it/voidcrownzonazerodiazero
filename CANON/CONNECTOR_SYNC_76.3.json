@@ -1,0 +1,9 @@
+{
+  "skill": "VOIDCROWN_NODO_CONNECTORS",
+  "version": "76.3.0-EVO-LELO",
+  "versionCode": 7630,
+  "apk": "https://github.com/cisc13c-ship-it/voidcrownzonazerodiazero/releases/download/v76.3.0-EVO-LELO/INSTALAR_VOIDCROWN.apk",
+  "sha256": "6e7e951b3c73dc72655ac3afe607a970553e9a9465f1a60b3a3a7f878417ae87",
+  "connectors": ["Google Drive", "GitHub"],
+  "drive_folder": "https://drive.google.com/drive/folders/1AIOXM9bO1aghMKmTBJVvcJvuFaxna6ad"
+}
